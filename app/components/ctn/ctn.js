@@ -1,10 +1,13 @@
-import * as React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import React from 'react';
+import { Box, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InfoWithButton() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box sx={{ background: 'white', padding: 3 }}>
       <Grid container spacing={4.5} justifyContent="center" alignItems="center">
@@ -16,7 +19,7 @@ function InfoWithButton() {
               background: '#4D917F',
               textAlign: 'center',
               color: 'white',
-              marginTop: '-20%',
+              marginTop: isSmallScreen ? '0' : '-20%',
               zIndex: 1,
               position: 'relative',
             }}
