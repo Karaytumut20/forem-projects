@@ -6,6 +6,7 @@ import { auth } from './firebase/config';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import './page.css'; // CSS dosyasını import et
 import ResponsiveAppBar from './components/navbar/navbar';
 import InfoWithButton from './components/ctn/ctn';
 import CardComp from './components/card/card';
