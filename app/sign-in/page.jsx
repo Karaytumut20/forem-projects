@@ -1,26 +1,50 @@
-'use client'
+'use client';
 import { useState } from 'react';
-import {useSignInWithEmailAndPassword} from 'react-firebase-hooks/auth'
-import {auth} from '@/app/firebase/config'
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '/app/firebase/config';
 import { useRouter } from 'next/navigation';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = MuiAlert;
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
-  const router = useRouter()
+  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
+  const router = useRouter();
 
   const handleSignIn = async () => {
-    try {
-        const res = await signInWithEmailAndPassword(email, password);
-        console.log({res});
-        sessionStorage.setItem('user', true)
-        setEmail('');
-        setPassword('');
-        router.push('/')
-    }catch(e){
-        console.error(e)
+    if (!email || !password) {
+      setAlertMessage('Please enter both email and password.');
+      setSeverity('error');
+      setOpen(true);
+      return;
     }
+
+    try {
+      const { user } = await signInWithEmailAndPassword(email, password);
+      console.log({ user });
+      sessionStorage.setItem('user', JSON.stringify(user)); // Store user object as JSON string
+      setEmail('');
+      setPassword('');
+      router.push('/');
+      setAlertMessage('Sign-in successful!');
+      setSeverity('success');
+      setOpen(true);
+    } catch (e) {
+      console.error(e);
+      setAlertMessage('Sign-in failed. Please check your email and password.');
+      setSeverity('error');
+      setOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -48,6 +72,11 @@ const SignIn = () => {
           Sign In
         </button>
       </div>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

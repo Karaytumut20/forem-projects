@@ -2,13 +2,14 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import {getAuth} from 'firebase/auth'
 
 const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
+    apiKey: "AIzaSyDLCmASch8Tet2R1MDnt9skETz6s2ZiIY8",
+    authDomain: "forem-c78dc.firebaseapp.com",
+    projectId: "forem-c78dc",
+    storageBucket: "forem-c78dc.appspot.com",
+    messagingSenderId: "62561986265",
+    appId: "1:62561986265:web:dd455856dba47ec90f00c8",
+    measurementId: "G-9G3GJCB5GR"
+  };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 

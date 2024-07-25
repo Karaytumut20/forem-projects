@@ -1,24 +1,47 @@
-'use client'
+'use client';
 import { useState } from 'react';
-import {useCreateUserWithEmailAndPassword} from 'react-firebase-hooks/auth'
-import {auth} from '@/app/firebase/config'
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '/app/firebase/config';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = MuiAlert;
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
 
   const handleSignUp = async () => {
-    try {
-        const res = await createUserWithEmailAndPassword(email, password)
-        console.log({res})
-        sessionStorage.setItem('user', true)
-        setEmail('');
-        setPassword('')
-
-    } catch(e){
-        console.error(e)
+    if (!email || !password) {
+      setAlertMessage('Please enter both email and password.');
+      setSeverity('error');
+      setOpen(true);
+      return;
     }
+
+    try {
+      const { user } = await createUserWithEmailAndPassword(email, password);
+      console.log({ user });
+      sessionStorage.setItem('user', JSON.stringify(user)); // Store user object as JSON string
+      setEmail('');
+      setPassword('');
+      setAlertMessage('Sign-up successful!');
+      setSeverity('success');
+      setOpen(true);
+    } catch (e) {
+      console.error(e);
+      setAlertMessage('Sign-up failed. Please try again.');
+      setSeverity('error');
+      setOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -46,6 +69,11 @@ const SignUp = () => {
           Sign Up
         </button>
       </div>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={severity}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
