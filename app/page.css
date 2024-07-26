@@ -109,6 +109,6 @@
 /* En küçük ekranlar için stil ayarları */
 @media (max-width: 599px) {
     .relative {
-      height: 140px; /* En küçük ekranlarda yükseklik */
+      height: 100px; /* En küçük ekranlarda yükseklik */
     }
 }

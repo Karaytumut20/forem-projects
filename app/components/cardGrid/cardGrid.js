@@ -16,7 +16,7 @@ const CardGrid = () => {
   return (
     <Grid container spacing={1} justifyContent="center" alignItems="center">
       {cards.map((card, index) => (
-        <Grid item xs={12} sm={6} md={3} key={index} container justifyContent="center">
+        <Grid item xs={5} sm={6} md={3} key={index} container justifyContent="center">
           <Card sx={{ height: "300px", width: '200px', boxShadow: 'none',}}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
               <Typography variant="h5" component="div">

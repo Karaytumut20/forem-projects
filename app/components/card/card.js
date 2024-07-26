@@ -42,7 +42,7 @@ function CardComp() {
     <>
       {pricingOptions.map((option, index) => (
         <Grid item key={index}>
-          <Card elevation={0} style={{ margin: '20px', width: '400px', textAlign: 'left', color: "black" }}>
+          <Card elevation={0} style={{  width: '400px', textAlign: 'left', color: "black" }}>
             <CardContent>
               <Typography variant="h4" component="div" style={{ fontWeight: 'bold', fontSize: '32px', marginBottom: '10px' ,textAlign:"center",margin: '10px'}}>
                 {option.title}
