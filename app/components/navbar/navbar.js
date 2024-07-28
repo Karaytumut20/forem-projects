@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { auth } from '../../firebase/config'; // Adjust the import path as needed
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,8 +18,21 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserEmail(user.email);
+      } else {
+        setUserEmail('');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,6 +49,24 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleNavigate = (path) => {
+    window.location.href = path;
+  };
+
+  const handleLogout = () => {
+    auth.signOut()
+      .then(() => {
+        setUserEmail('');
+        handleCloseUserMenu();
+        window.location.href = '/sign-in'; // Redirect to sign-in page after logout
+      })
+      .catch((error) => {
+        console.error('Error signing out: ', error);
+      });
+  };
+
+  const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#ffff' }}>
       <Container maxWidth="xl">
@@ -49,7 +82,7 @@ function ResponsiveAppBar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: '#000', // Siyah renk
+              color: '#000', // Black color
               textDecoration: 'none',
             }}
           >
@@ -65,7 +98,7 @@ function ResponsiveAppBar() {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              <MenuIcon sx={{ color: '#000' }} /> {/* Menü ikonunu da siyah yapabilirsiniz */}
+              <MenuIcon sx={{ color: '#000' }} /> {/* Black color for menu icon */}
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -87,7 +120,7 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" sx={{ color: '#000' }}>{page}</Typography> {/* Siyah renk */}
+                  <Typography textAlign="center" sx={{ color: '#000' }}>{page}</Typography> {/* Black color */}
                 </MenuItem>
               ))}
             </Menu>
@@ -104,7 +137,7 @@ function ResponsiveAppBar() {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: '#000', // Siyah renk
+              color: '#000', // Black color
               textDecoration: 'none',
             }}
           >
@@ -115,17 +148,31 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: '#000', display: 'block', mx: 1 }} // Siyah renk
+                sx={{ my: 2, color: '#000', display: 'block', mx: 1 }} // Black color
               >
                 {page}
               </Button>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+            <Button
+              sx={{ mr: 2, color: '#000', background: '#ffd740' }}
+              onClick={() => handleNavigate('/sign-in')}
+            >
+              Live demo
+            </Button>
+            <Button
+              sx={{ mr: 2, color: '#000' }}
+              onClick={() => handleNavigate('/sign-in')}
+            >
+              Get started now
+            </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar>
+                  {emailInitial}
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -145,8 +192,8 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" sx={{ color: '#000' }}>{setting}</Typography> {/* Siyah renk */}
+                <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
+                  <Typography textAlign="center" sx={{ color: '#000' }}>{setting}</Typography> {/* Black color */}
                 </MenuItem>
               ))}
             </Menu>

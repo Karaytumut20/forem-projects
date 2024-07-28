@@ -14,6 +14,14 @@ import CardGrid from './components/cardGrid/cardGrid';
 import CardCopmonent from './components/carcComponent/cardComponenet';
 import TextWithImageComponent from './components/TextWithImageComponent/TextWithImageComponent';
 import FooterCard from './components/footer/footer';
+import DomainSelection from './components/DomainSelection/DomainSelection';
+import FreeDomainForm from './components/FreeDomainForm/FreeDomainForm';
+import Yourowndomain from './components/Yourowndomain/Yourowndomain';
+import PaymentDetailsForm from './components/PaymentDetailsForm/PaymentDetailsForm';
+import AboutYourSiteForm from './components/AboutYourSiteForm/AboutYourSiteForm';
+import SiteOnTheWay from './components/SiteOnTheWay/SiteOnTheWay';
+
+
 
 
 export default function Home() {
@@ -29,11 +37,11 @@ export default function Home() {
     }
   }, []);
 
-  // useEffect(() => {
-  // if (!user && !userSession) {
-  // router.push('/sign-in');
-  //}
-  //}, [user, userSession, router]);
+   useEffect(() => {
+  if (!user && !userSession) {
+  router.push('/sign-in');
+  }
+  }, [user, userSession, router]);
 
   const handleSignOut = () => {
     signOut(auth);
@@ -155,6 +163,12 @@ export default function Home() {
       <CardCopmonent/>
       <TextWithImageComponent/>
       <FooterCard/>
+      <DomainSelection />
+      <FreeDomainForm/>
+      <Yourowndomain/>
+      <PaymentDetailsForm/>
+      <AboutYourSiteForm/>
+      <SiteOnTheWay/>
     </main>
   );
 }

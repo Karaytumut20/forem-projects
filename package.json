@@ -20,7 +20,8 @@
     "react": "^18",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18",
-    "react-firebase-hooks": "^5.1.1"
+    "react-firebase-hooks": "^5.1.1",
+    "reactstrap": "^9.2.2"
   },
   "devDependencies": {
     "autoprefixer": "^10",

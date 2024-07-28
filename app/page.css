@@ -1,114 +1,138 @@
-/* En büyük ekranlar için stil ayarları */
-@media (min-width: 1440px) {
-    .relative {
-      height: 370px; /* En büyük ekranlarda yükseklik */
-    }
-    main {
+/* 2000px genişlikten başlayarak her 60px artışta 10px artan yükseklik */
+@media (min-width: 2000px) {
+  .relative {
+      height: 400px; /* 2000px ve üzeri ekranlarda yükseklik */
+  }
+  main {
       padding: 0px; /* En büyük ekranlarda padding ayarı */
-    }
+  }
+}
+@media (max-width: 1999px) and (min-width: 1940px) {
+  .relative {
+      height: 390px;
+  }
+}
+@media (max-width: 1939px) and (min-width: 1880px) {
+  .relative {
+      height: 380px;
+  }
+}
+@media (max-width: 1879px) and (min-width: 1820px) {
+  .relative {
+      height: 370px;
+  }
+}
+@media (max-width: 1819px) and (min-width: 1760px) {
+  .relative {
+      height: 360px;
+  }
+}
+@media (max-width: 1759px) and (min-width: 1700px) {
+  .relative {
+      height: 350px;
+  }
+}
+@media (max-width: 1699px) and (min-width: 1640px) {
+  .relative {
+      height: 340px;
+  }
+}
+@media (max-width: 1639px) and (min-width: 1580px) {
+  .relative {
+      height: 330px;
+  }
+}
+@media (max-width: 1579px) and (min-width: 1520px) {
+  .relative {
+      height: 320px;
+  }
+}
+@media (max-width: 1519px) and (min-width: 1460px) {
+  .relative {
+      height: 310px;
+  }
+}
+@media (max-width: 1459px) and (min-width: 1440px) {
+  .relative {
+      height: 300px;
+  }
 }
 
-/* Ekran boyutu 60px küçüldüğünde */
+/* 1440px - 600px arası her 60px küçüldüğünde her seferinde yüksekliği 10px azalt */
 @media (max-width: 1439px) and (min-width: 1380px) {
-    .relative {
-      height: 360px; /* 60px küçülünce yükseklik */
-    }
+  .relative {
+      height: 290px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1379px) and (min-width: 1320px) {
-    .relative {
-      height: 350px; /* 120px küçülünce yükseklik */
-    }
+  .relative {
+      height: 280px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1319px) and (min-width: 1260px) {
-    .relative {
-      height: 340px; /* 180px küçülünce yükseklik */
-    }
+  .relative {
+      height: 270px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1259px) and (min-width: 1200px) {
-    .relative {
-      height: 330px; /* 240px küçülünce yükseklik */
-    }
+  .relative {
+      height: 260px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1199px) and (min-width: 1140px) {
-    .relative {
-      height: 320px; /* 300px küçülünce yükseklik */
-    }
+  .relative {
+      height: 250px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1139px) and (min-width: 1080px) {
-    .relative {
-      height: 310px; /* 360px küçülünce yükseklik */
-    }
+  .relative {
+      height: 240px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1079px) and (min-width: 1020px) {
-    .relative {
-      height: 300px; /* 420px küçülünce yükseklik */
-    }
+  .relative {
+      height: 230px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 1019px) and (min-width: 960px) {
-    .relative {
-      height: 290px; /* 480px küçülünce yükseklik */
-    }
+  .relative {
+      height: 220px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 959px) and (min-width: 900px) {
-    .relative {
-      height: 280px; /* 540px küçülünce yükseklik */
-    }
+  .relative {
+      height: 210px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 899px) and (min-width: 840px) {
-    .relative {
-      height: 270px; /* 600px küçülünce yükseklik */
-    }
+  .relative {
+      height: 200px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 839px) and (min-width: 780px) {
-    .relative {
-      height: 260px; /* 660px küçülünce yükseklik */
-    }
+  .relative {
+      height: 190px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 779px) and (min-width: 720px) {
-    .relative {
-      height: 250px; /* 720px küçülünce yükseklik */
-    }
+  .relative {
+      height: 180px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 719px) and (min-width: 660px) {
-    .relative {
-      height: 230px; /* 780px küçülünce yükseklik */
-    }
+  .relative {
+      height: 170px;
+  }
 }
-
-/* Ekran boyutu 60px küçüldüğünde */
 @media (max-width: 659px) and (min-width: 600px) {
-    .relative {
-      height: 200px; /* 840px küçülünce yükseklik */
-    }
+  .relative {
+      height: 160px;
+  }
 }
 
 /* En küçük ekranlar için stil ayarları */
 @media (max-width: 599px) {
-    .relative {
-      height: 100px; /* En küçük ekranlarda yükseklik */
-    }
+  .relative {
+      height: 150px; /* En küçük ekranlarda yükseklik */
+  }
 }
