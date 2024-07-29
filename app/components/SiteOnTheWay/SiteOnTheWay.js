@@ -25,11 +25,14 @@ const SiteOnTheWay = () => {
         <br />
         Check your email for the updates. Note that normally it takes 12-24 hours.
       </Typography>
-      <Button variant="contained" color="primary" onClick={handleJumpIn}>
+      <Button variant="contained" className="btn btn-primary" onClick={handleJumpIn}>
         Jump In
       </Button>
     </Box>
   );
 };
+
+
+
 
 export default SiteOnTheWay;

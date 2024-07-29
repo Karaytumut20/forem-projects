@@ -13,6 +13,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -21,6 +23,10 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userEmail, setUserEmail] = useState('');
+
+  const theme = useTheme();
+  const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -75,7 +81,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -84,6 +90,7 @@ function ResponsiveAppBar() {
               letterSpacing: '.3rem',
               color: '#000', // Black color
               textDecoration: 'none',
+              fontSize: isExtraSmallScreen ? '12px' : isSmallScreen ? '14px' : '18px',
             }}
           >
             Forem2go
@@ -120,7 +127,7 @@ function ResponsiveAppBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center" sx={{ color: '#000' }}>{page}</Typography> {/* Black color */}
+                  <Typography textAlign="center" sx={{ color: '#000', fontSize: isExtraSmallScreen ? '14px' : isSmallScreen ? '15px' : '16px' }}>{page}</Typography> {/* Black color */}
                 </MenuItem>
               ))}
             </Menu>
@@ -129,7 +136,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -139,6 +146,7 @@ function ResponsiveAppBar() {
               letterSpacing: '.3rem',
               color: '#000', // Black color
               textDecoration: 'none',
+              fontSize: isExtraSmallScreen ? '14px' : isSmallScreen ? '16px' : '20px',
             }}
           >
             Forem2go
@@ -148,7 +156,7 @@ function ResponsiveAppBar() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: '#000', display: 'block', mx: 1 }} // Black color
+                sx={{ my: 2, color: '#000', display: 'block', mx: 1, fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }} // Black color
               >
                 {page}
               </Button>
@@ -157,20 +165,20 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
             <Button
-              sx={{ mr: 2, color: '#000', background: '#ffd740' }}
+              sx={{ mr: 2, color: '#000', background: '#ffd740', fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }}
               onClick={() => handleNavigate('/sign-in')}
             >
               Live demo
             </Button>
             <Button
-              sx={{ mr: 2, color: '#000' }}
+              sx={{ mr: 2, color: '#000', fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }}
               onClick={() => handleNavigate('/sign-in')}
             >
               Get started now
             </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar>
+                <Avatar sx={{ width: isExtraSmallScreen ? 24 : 32, height: isExtraSmallScreen ? 24 : 32 }}>
                   {emailInitial}
                 </Avatar>
               </IconButton>
@@ -193,7 +201,7 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
-                  <Typography textAlign="center" sx={{ color: '#000' }}>{setting}</Typography> {/* Black color */}
+                  <Typography textAlign="center" sx={{ color: '#000', fontSize: isExtraSmallScreen ? '14px' : isSmallScreen ? '15px' : '16px' }}>{setting}</Typography> {/* Black color */}
                 </MenuItem>
               ))}
             </Menu>

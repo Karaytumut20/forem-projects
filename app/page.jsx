@@ -20,6 +20,7 @@ import Yourowndomain from './components/Yourowndomain/Yourowndomain';
 import PaymentDetailsForm from './components/PaymentDetailsForm/PaymentDetailsForm';
 import AboutYourSiteForm from './components/AboutYourSiteForm/AboutYourSiteForm';
 import SiteOnTheWay from './components/SiteOnTheWay/SiteOnTheWay';
+import DomainDetails from './components/DomainDetails/DomainDetails';
 
 
 
@@ -38,7 +39,7 @@ export default function Home() {
   }, []);
 
    useEffect(() => {
-  if (!user && !userSession) {
+   if (!user && !userSession) {
   router.push('/sign-in');
   }
   }, [user, userSession, router]);
@@ -169,6 +170,7 @@ export default function Home() {
       <PaymentDetailsForm/>
       <AboutYourSiteForm/>
       <SiteOnTheWay/>
+      <DomainDetails/>
     </main>
   );
 }

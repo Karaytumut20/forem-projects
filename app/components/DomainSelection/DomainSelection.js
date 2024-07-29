@@ -48,10 +48,9 @@ const DomainSelection = () => {
           </RadioGroup>
         </FormControl>
         <Box mt={3} display="flex" justifyContent="space-between" width="100%">
-          <Button variant="outlined" onClick={() => console.log("Go back")}>
-            Go back
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleContinue}>
+          <Button variant="outlined" className="btn btn-outline-secondary">Go back</Button>
+
+          <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
             Continue
           </Button>
         </Box>
