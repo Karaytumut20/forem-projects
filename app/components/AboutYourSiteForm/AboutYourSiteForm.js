@@ -1,5 +1,3 @@
-// /components/AboutYourSiteForm.js
-
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,11 +26,15 @@ const AboutYourSiteForm = () => {
   };
 
   const handleContinue = () => {
-    // Handle the continue action
     console.log("Admin Email:", adminEmail);
     console.log("Admin Password:", adminPassword);
     console.log("Community Name:", communityName);
     console.log("Community Description:", communityDescription);
+    window.location.href = '/DomainDetails';
+  };
+
+  const handleGoBack = () => {
+    window.location.href = '/FreeDomainForm';
   };
 
   return (
@@ -81,7 +83,9 @@ const AboutYourSiteForm = () => {
         </FormGroup>
         <Row className="mt-3">
           <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary">Go back</Button>
+            <Button variant="outlined" className="btn btn-outline-secondary" onClick={handleGoBack}>
+              Go back
+            </Button>
             <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
               Continue
             </Button>

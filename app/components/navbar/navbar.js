@@ -55,8 +55,12 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleNavigate = (path) => {
-    window.location.href = path;
+  const handleNavigate = () => {
+    if (userEmail) {
+      window.location.href = '/DomainSelection';
+    } else {
+      window.location.href = '/sign-in';
+    }
   };
 
   const handleLogout = () => {
@@ -172,7 +176,7 @@ function ResponsiveAppBar() {
             </Button>
             <Button
               sx={{ mr: 2, color: '#000', fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }}
-              onClick={() => handleNavigate('/sign-in')}
+              onClick={handleNavigate}
             >
               Get started now
             </Button>

@@ -22,9 +22,6 @@ import AboutYourSiteForm from './components/AboutYourSiteForm/AboutYourSiteForm'
 import SiteOnTheWay from './components/SiteOnTheWay/SiteOnTheWay';
 import DomainDetails from './components/DomainDetails/DomainDetails';
 
-
-
-
 export default function Home() {
   const [user] = useAuthState(auth);
   const router = useRouter();
@@ -38,11 +35,11 @@ export default function Home() {
     }
   }, []);
 
-   useEffect(() => {
-   if (!user && !userSession) {
-  router.push('/sign-in');
-  }
-  }, [user, userSession, router]);
+  // useEffect(() => {
+  // if (!user && !userSession) {
+  // router.push('/sign-in');
+  //}
+  //}, [user, userSession, router]);
 
   const handleSignOut = () => {
     signOut(auth);
@@ -56,7 +53,8 @@ export default function Home() {
         <Image
           src="/img1.png" // Resmin public klasöründeki yolu
           alt="Description of image"
-          layout="fill" // Resmin kapsayıcı alanı tamamen doldurmasını sağlar
+          fill // 'layout' prop yerine 'fill' kullanıyoruz
+          style={{ objectFit: 'cover' }} // Resmin kapsayıcı alanı tamamen doldurmasını sağlar
         />
       </Box>
       <InfoWithButton />
@@ -148,7 +146,7 @@ export default function Home() {
             marginBottom: '10px'
           }}
         >
-          Try Forem hosting in 4 Steps 
+          Try Forem hosting in 4 Steps
         </Typography>
         <Typography
           variant="h3"
@@ -161,16 +159,9 @@ export default function Home() {
           Simple and easy setup
         </Typography>
       </Box>
-      <CardCopmonent/>
-      <TextWithImageComponent/>
-      <FooterCard/>
-      <DomainSelection />
-      <FreeDomainForm/>
-      <Yourowndomain/>
-      <PaymentDetailsForm/>
-      <AboutYourSiteForm/>
-      <SiteOnTheWay/>
-      <DomainDetails/>
+      <CardCopmonent />
+      <TextWithImageComponent />
+      <FooterCard />
     </main>
   );
 }

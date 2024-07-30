@@ -1,7 +1,6 @@
-// /components/DomainSelector.js
-
 import React, { useState } from 'react';
 import { Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Button } from '@mui/material';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DomainSelection = () => {
   const [selectedDomain, setSelectedDomain] = useState('');
@@ -11,8 +10,15 @@ const DomainSelection = () => {
   };
 
   const handleContinue = () => {
-    // Handle the continue action based on selected domain
-    console.log("Selected Domain:", selectedDomain);
+    if (selectedDomain === 'free') {
+      window.location.href = '/FreeDomainForm';
+    } else if (selectedDomain === 'own') {
+      window.location.href = '/Yourowndomain';
+    }
+  };
+
+  const handleGoBack = () => {
+    window.location.href = '/';
   };
 
   return (
@@ -48,15 +54,13 @@ const DomainSelection = () => {
           </RadioGroup>
         </FormControl>
         <Box mt={3} display="flex" justifyContent="space-between" width="100%">
-          <Button variant="outlined" className="btn btn-outline-secondary">Go back</Button>
-
+          <Button variant="outlined" className="btn btn-outline-secondary" onClick={handleGoBack}>
+            Go back
+          </Button>
           <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
             Continue
           </Button>
         </Box>
-      </Box>
-      <Box mt={4} style={{ fontSize: '14px', color: '#666666' }}>
-        01 / 04
       </Box>
     </Box>
   );

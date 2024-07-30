@@ -1,12 +1,10 @@
-// /components/SiteOnTheWay.js
-
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SiteOnTheWay = () => {
   const handleJumpIn = () => {
-    // Handle the jump in action (e.g., navigate to another page)
-    console.log("Jump In button clicked!");
+    window.location.href = '/';
   };
 
   return (
@@ -31,8 +29,5 @@ const SiteOnTheWay = () => {
     </Box>
   );
 };
-
-
-
 
 export default SiteOnTheWay;

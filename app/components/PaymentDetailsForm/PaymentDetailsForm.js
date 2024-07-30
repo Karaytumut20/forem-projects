@@ -1,5 +1,3 @@
-// /components/PaymentDetailsForm.js
-
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, FormControlLabel, Checkbox, MenuItem } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -43,14 +41,11 @@ const PaymentDetailsForm = () => {
   };
 
   const handleSubmit = () => {
-    // Handle the form submission
-    console.log("Card Number:", cardNumber);
-    console.log("Expiry Month:", expiryMonth);
-    console.log("Expiry Year:", expiryYear);
-    console.log("CVV:", cvv);
-    console.log("Card Holder:", cardHolder);
-    console.log("Terms Accepted:", termsAccepted);
-    console.log("Updates Subscribed:", updatesSubscribed);
+    window.location.href = '/SiteOnTheWay';
+  };
+
+  const handleCancel = () => {
+    window.location.href = '/DomainDetails';
   };
 
   return (
@@ -152,8 +147,18 @@ const PaymentDetailsForm = () => {
         </FormGroup>
         <Row className="mt-3">
           <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary">Cancel</Button>
-            <Button variant="contained" className="btn btn-primary" onClick={handleSubmit}>
+            <Button 
+              variant="outlined" 
+              className="btn btn-outline-secondary"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+            <Button 
+              variant="contained" 
+              className="btn btn-primary" 
+              onClick={handleSubmit}
+            >
               Submit
             </Button>
           </Col>

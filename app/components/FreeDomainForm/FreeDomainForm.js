@@ -29,7 +29,12 @@ const FreeDomainForm = () => {
     } else {
       console.log("Domain:", domain);
       console.log("Server Location:", serverLocation);
+      window.location.href = '/AboutYourSiteForm';
     }
+  };
+
+  const handleGoBack = () => {
+    window.location.href = '/DomainSelection';
   };
 
   return (
@@ -75,7 +80,9 @@ const FreeDomainForm = () => {
         </FormGroup>
         <Row className="mt-3">
           <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary">Go back</Button>
+            <Button variant="outlined" className="btn btn-outline-secondary" onClick={handleGoBack}>
+              Go back
+            </Button>
             <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
               Continue
             </Button>
