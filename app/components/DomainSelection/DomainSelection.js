@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Button } from '@mui/material';
+import { auth } from '../../firebase/config';
+import { addDomainSelection } from '../../firebase/firestore';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DomainSelection = () => {
@@ -9,11 +11,23 @@ const DomainSelection = () => {
     setSelectedDomain(event.target.value);
   };
 
-  const handleContinue = () => {
-    if (selectedDomain === 'free') {
-      window.location.href = '/FreeDomainForm';
-    } else if (selectedDomain === 'own') {
-      window.location.href = '/Yourowndomain';
+  const handleContinue = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await addDomainSelection(user.uid, selectedDomain);
+
+        if (selectedDomain === 'free') {
+          window.location.href = '/FreeDomainForm';
+        } else {
+          window.location.href = '/Yourowndomain';
+        }
+      } else {
+        console.error('No authenticated user found');
+      }
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      alert(`Error: ${error.message}`);
     }
   };
 

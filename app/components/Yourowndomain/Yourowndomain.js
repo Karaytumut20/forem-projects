@@ -1,5 +1,3 @@
-// /components/DomainDetails.js
-
 import React, { useState } from 'react';
 import { Box, TextField, MenuItem, Button, Typography } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -31,7 +29,12 @@ const DomainDetails = () => {
     } else {
       console.log("Domain:", domain);
       console.log("Server Location:", serverLocation);
+      window.location.href = '/AboutYourSiteForm'; // Redirect to the documentation page
     }
+  };
+
+  const handleCancel = () => {
+    window.location.href = '/DomainDetails';
   };
 
   return (
@@ -71,7 +74,13 @@ const DomainDetails = () => {
         </FormGroup>
         <Row className="mt-3">
           <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary">Go back</Button>
+            <Button 
+              variant="outlined" 
+              className="btn btn-outline-secondary"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
             <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
               Continue
             </Button>
