@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     border: "0.0001px solid black",
   },
 });
-
+//sdadasdadas
 const Cube = ({ frontColor, topColor, rightColor }) => {
   const classes = useStyles();
 
