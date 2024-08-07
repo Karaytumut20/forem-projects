@@ -46,7 +46,7 @@ export default function Home() {
       <ResponsiveAppBar />
       <Box className="relative w-full h-96">
         <Image
-          src="/img1.png" // Resmin public klasöründeki yolu
+          src="/img1.png" // Resminsdsa public klasöründeki yolu
           alt="Description of image"
           fill // 'layout' prop yerine 'fill' kullanıyoruz
           style={{ objectFit: 'cover' }} // Resmin kapsayıcı alanı tamamen doldurmasını sağlar
