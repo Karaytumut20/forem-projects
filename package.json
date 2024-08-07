@@ -11,9 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.1",
-    "@mui/icons-material": "^5.17.2",
-    "@mui/material": "^5.17.2",
-    "@mui/styles": "^5.17.2",
+    "@mui/icons-material": "^5.14.11",
+    "@mui/material": "^5.14.11",
+    "@mui/styles": "^5.14.11",
     "bootstrap": "^5.3.3",
     "encoding": "^0.1.13",
     "firebase": "^10.6.0",
@@ -21,7 +21,7 @@
     "react": "^18.3.0",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.0",
-    "react-firebase-hooks": "^5.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "reactstrap": "^9.2.2"
   },
   "devDependencies": {
