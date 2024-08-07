@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Box, TextField, MenuItem, Button, Typography } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Box, TextField, MenuItem, Button, Typography, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
+import { auth } from '../../firebase/config';
+import { addDomainDetails } from '../../firebase/firestore';  // Correct function import
 
 const DomainDetails = () => {
   const [domain, setDomain] = useState('');
   const [serverLocation, setServerLocation] = useState('');
   const [error, setError] = useState(false);
-  
+
   const serverLocations = [
     { value: 'us', label: 'United States' },
     { value: 'eu', label: 'Europe' },
@@ -23,13 +23,24 @@ const DomainDetails = () => {
     setError(false);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!serverLocation) {
       setError(true);
     } else {
-      console.log("Domain:", domain);
-      console.log("Server Location:", serverLocation);
-      window.location.href = '/AboutYourSiteForm'; // Redirect to the documentation page
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          await addDomainDetails(user.uid, domain, serverLocation);  // Correct function call
+          console.log('Domain:', domain);
+          console.log('Server Location:', serverLocation);
+          window.location.href = '/AboutYourSiteForm'; // Redirect to the next form
+        } else {
+          console.error('No authenticated user found');
+        }
+      } catch (error) {
+        console.error('Error adding document: ', error);
+        alert(`Error: ${error.message}`);
+      }
     }
   };
 
@@ -38,56 +49,59 @@ const DomainDetails = () => {
   };
 
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      <Typography variant="h5" className="mb-3">Your own domain</Typography>
-      <Form className="w-100" style={{ maxWidth: '400px' }}>
-        <FormGroup>
-          <TextField
-            label="Your own domain"
-            variant="outlined"
-            fullWidth
-            value={domain}
-            onChange={handleDomainChange}
-            helperText="For example: mydomain.com or community.mydomain.com"
-            margin="normal"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="serverLocation">Server location</Label>
-          <Input
-            type="select"
-            name="serverLocation"
-            id="serverLocation"
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      bgcolor="#f5f5f5"
+      p={3}
+    >
+      <Typography sx={{color:"black"}} variant="h5" mb={3}>Your own domain</Typography>
+      <Box
+        component="form"
+        sx={{ width: '100%', maxWidth: '400px' }}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+      >
+        <TextField
+          label="Your own domain"
+          variant="outlined"
+          fullWidth
+          value={domain}
+          onChange={handleDomainChange}
+          helperText="For example: mydomain.com or community.mydomain.com"
+          margin="normal"
+        />
+        <FormControl fullWidth margin="normal" error={error}>
+          <InputLabel htmlFor="serverLocation">Server location</InputLabel>
+          <Select
             value={serverLocation}
             onChange={handleServerLocationChange}
+            label="Server location"
+            inputProps={{ id: 'serverLocation' }}
           >
-            <option value="" disabled>Select server location</option>
+            <MenuItem value="" disabled>Select server location</MenuItem>
             {serverLocations.map((option) => (
-              <option key={option.value} value={option.value}>
+              <MenuItem key={option.value} value={option.value}>
                 {option.label}
-              </option>
+              </MenuItem>
             ))}
-          </Input>
-          {error && (
-            <Typography color="error" className="mt-2">Please choose your location</Typography>
-          )}
-        </FormGroup>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-between">
-            <Button 
-              variant="outlined" 
-              className="btn btn-outline-secondary"
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
-              Continue
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </Container>
+          </Select>
+          {error && <FormHelperText>Please choose your location</FormHelperText>}
+        </FormControl>
+        <Box mt={3} display="flex" justifyContent="space-between" width="100%">
+          <Button variant="outlined" onClick={handleCancel}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleContinue}>
+            Continue
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

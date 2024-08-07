@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, MenuItem, Button, Typography } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Box, TextField, Select, MenuItem, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 const FreeDomainForm = () => {
   const [domain, setDomain] = useState('doodle');
@@ -38,58 +36,81 @@ const FreeDomainForm = () => {
   };
 
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      <Typography variant="h5" className="mb-3">Free domain</Typography>
-      <Form className="w-100" style={{ maxWidth: '400px' }}>
-        <FormGroup>
-          <Box display="flex" alignItems="center">
-            <TextField
-              label="Domain"
-              value={domain}
-              onChange={handleDomainChange}
-              fullWidth
-              margin="normal"
-              InputProps={{
-                endAdornment: '.forem2go.org',
-              }}
-            />
-          </Box>
-          <Typography variant="body2" color="error" className="mt-2 mb-2">
-            Not available
-          </Typography>
-        </FormGroup>
-        <FormGroup>
-          <Label for="serverLocation">Server location</Label>
-          <Input
-            type="select"
-            name="serverLocation"
-            id="serverLocation"
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      bgcolor="background.default"
+      p={3}
+    >
+      <Typography variant="h5" gutterBottom sx={{color:"black"}}>
+        Free domain
+      </Typography>
+      <Box
+        component="form"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        bgcolor="background.paper"
+        p={4}
+        borderRadius={2}
+        boxShadow={3}
+        width="400px"
+      >
+        <TextField
+          label="Domain"
+          value={domain}
+          onChange={handleDomainChange}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            endAdornment: '.forem2go.org',
+          }}
+        />
+        <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+          Not available
+        </Typography>
+        
+        <FormControl fullWidth margin="normal" error={error}>
+          <InputLabel id="serverLocation-label">Server location</InputLabel>
+          <Select
+            labelId="serverLocation-label"
             value={serverLocation}
             onChange={handleServerLocationChange}
+            label="Server location"
           >
-            <option value="" disabled>Select server location</option>
+            <MenuItem value="" disabled>Select server location</MenuItem>
             {serverLocations.map((option) => (
-              <option key={option.value} value={option.value}>
+              <MenuItem key={option.value} value={option.value}>
                 {option.label}
-              </option>
+              </MenuItem>
             ))}
-          </Input>
-          {error && (
-            <Typography color="error" className="mt-2">Please choose your location</Typography>
-          )}
-        </FormGroup>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary" onClick={handleGoBack}>
-              Go back
-            </Button>
-            <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
-              Continue
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </Container>
+          </Select>
+          {error && <FormHelperText>Please choose your location</FormHelperText>}
+        </FormControl>
+        
+        <Box display="flex" justifyContent="space-between" width="100%" mt={3}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleGoBack}
+            sx={{ flex: 1, mr: 1 }}
+          >
+            Go back
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleContinue}
+            sx={{ flex: 1, ml: 1 }}
+          >
+            Continue
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

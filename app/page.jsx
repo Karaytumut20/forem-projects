@@ -14,13 +14,8 @@ import CardGrid from './components/cardGrid/cardGrid';
 import CardCopmonent from './components/carcComponent/cardComponenet';
 import TextWithImageComponent from './components/TextWithImageComponent/TextWithImageComponent';
 import FooterCard from './components/footer/footer';
-import DomainSelection from './components/DomainSelection/DomainSelection';
-import FreeDomainForm from './components/FreeDomainForm/FreeDomainForm';
-import Yourowndomain from './components/Yourowndomain/Yourowndomain';
-import PaymentDetailsForm from './components/PaymentDetailsForm/PaymentDetailsForm';
-import AboutYourSiteForm from './components/AboutYourSiteForm/AboutYourSiteForm';
-import SiteOnTheWay from './components/SiteOnTheWay/SiteOnTheWay';
-import DomainDetails from './components/DomainDetails/DomainDetails';
+import CubeCard from './components/CubeCard/cubeCard';
+
 
 export default function Home() {
   const [user] = useAuthState(auth);
@@ -160,8 +155,10 @@ export default function Home() {
         </Typography>
       </Box>
       <CardCopmonent />
+      <CubeCard/>
       <TextWithImageComponent />
       <FooterCard />
+      
     </main>
   );
 }

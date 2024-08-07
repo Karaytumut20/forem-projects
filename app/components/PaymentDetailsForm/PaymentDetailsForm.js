@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, FormControlLabel, Checkbox, MenuItem } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Box, TextField, Button, Typography, FormControlLabel, Checkbox, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 
 const PaymentDetailsForm = () => {
   const [cardNumber, setCardNumber] = useState('');
@@ -11,6 +9,7 @@ const PaymentDetailsForm = () => {
   const [cardHolder, setCardHolder] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [updatesSubscribed, setUpdatesSubscribed] = useState(false);
+  const [error, setError] = useState('');
 
   const handleCardNumberChange = (event) => {
     setCardNumber(event.target.value);
@@ -41,7 +40,12 @@ const PaymentDetailsForm = () => {
   };
 
   const handleSubmit = () => {
-    window.location.href = '/SiteOnTheWay';
+    if (!termsAccepted) {
+      setError('You must accept the terms and conditions.');
+    } else {
+      setError('');
+      window.location.href = '/SiteOnTheWay';
+    }
   };
 
   const handleCancel = () => {
@@ -49,122 +53,134 @@ const PaymentDetailsForm = () => {
   };
 
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      <Typography variant="h5" className="mb-3">Payment Details</Typography>
-      <Form className="w-100" style={{ maxWidth: '400px' }}>
-        <FormGroup>
-          <Label for="cardNumber">Card Number</Label>
-          <Input
-            type="text"
-            name="cardNumber"
-            id="cardNumber"
-            value={cardNumber}
-            onChange={handleCardNumberChange}
-            placeholder="Enter your card number"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Row>
-            <Col>
-              <Label for="expiryMonth">Exp Month</Label>
-              <Input
-                type="select"
-                name="expiryMonth"
-                id="expiryMonth"
-                value={expiryMonth}
-                onChange={handleExpiryMonthChange}
-              >
-                <option value="" disabled>Select month</option>
-                {[...Array(12).keys()].map((month) => (
-                  <option key={month + 1} value={month + 1}>
-                    {String(month + 1).padStart(2, '0')}
-                  </option>
-                ))}
-              </Input>
-            </Col>
-            <Col>
-              <Label for="expiryYear">Exp Year</Label>
-              <Input
-                type="select"
-                name="expiryYear"
-                id="expiryYear"
-                value={expiryYear}
-                onChange={handleExpiryYearChange}
-              >
-                <option value="" disabled>Select year</option>
-                {[...Array(10).keys()].map((year) => (
-                  <option key={year + new Date().getFullYear()} value={year + new Date().getFullYear()}>
-                    {year + new Date().getFullYear()}
-                  </option>
-                ))}
-              </Input>
-            </Col>
-            <Col>
-              <Label for="cvv">CVV</Label>
-              <Input
-                type="password"
-                name="cvv"
-                id="cvv"
-                value={cvv}
-                onChange={handleCvvChange}
-                placeholder="Enter CVV"
-              />
-            </Col>
-          </Row>
-        </FormGroup>
-        <FormGroup>
-          <Label for="cardHolder">Card Holder</Label>
-          <Input
-            type="text"
-            name="cardHolder"
-            id="cardHolder"
-            value={cardHolder}
-            onChange={handleCardHolderChange}
-            placeholder="Enter card holder name"
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={termsAccepted}
-                onChange={handleTermsChange}
-                color="primary"
-              />
-            }
-            label="I agree to the Forem2go terms"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={updatesSubscribed}
-                onChange={handleUpdatesChange}
-                color="primary"
-              />
-            }
-            label="Send me product and services updates by email"
-          />
-        </FormGroup>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-between">
-            <Button 
-              variant="outlined" 
-              className="btn btn-outline-secondary"
-              onClick={handleCancel}
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      bgcolor="background.default"
+      p={3}
+    >
+      <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
+        Payment Details
+      </Typography>
+      <Box
+        component="form"
+        display="flex"
+        flexDirection="column"
+        alignItems="start"
+        bgcolor="background.paper"
+        p={4}
+        borderRadius={2}
+        boxShadow={3}
+        width="400px"
+      >
+        <TextField
+          label="Card Number"
+          value={cardNumber}
+          onChange={handleCardNumberChange}
+          fullWidth
+          margin="normal"
+          placeholder="Enter your card number"
+          sx={{ color: 'black' }}
+        />
+        <Box display="flex" justifyContent="space-between" width="100%" mb={2}>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="expiryMonth-label" sx={{ color: 'black' }}>Exp Month</InputLabel>
+            <Select
+              labelId="expiryMonth-label"
+              value={expiryMonth}
+              onChange={handleExpiryMonthChange}
+              label="Exp Month"
             >
-              Cancel
-            </Button>
-            <Button 
-              variant="contained" 
-              className="btn btn-primary" 
-              onClick={handleSubmit}
+              <MenuItem value="" disabled>Select month</MenuItem>
+              {[...Array(12).keys()].map((month) => (
+                <MenuItem key={month + 1} value={month + 1}>
+                  {String(month + 1).padStart(2, '0')}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="expiryYear-label" sx={{ color: 'black' }}>Exp Year</InputLabel>
+            <Select
+              labelId="expiryYear-label"
+              value={expiryYear}
+              onChange={handleExpiryYearChange}
+              label="Exp Year"
             >
-              Submit
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </Container>
+              <MenuItem value="" disabled>Select year</MenuItem>
+              {[...Array(10).keys()].map((year) => (
+                <MenuItem key={year + new Date().getFullYear()} value={year + new Date().getFullYear()}>
+                  {year + new Date().getFullYear()}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth margin="normal">
+            <TextField
+              label="CVV"
+              value={cvv}
+              onChange={handleCvvChange}
+              type="password"
+              placeholder="Enter CVV"
+              sx={{ color: 'black' }}
+            />
+          </FormControl>
+        </Box>
+        <TextField
+          label="Card Holder"
+          value={cardHolder}
+          onChange={handleCardHolderChange}
+          fullWidth
+          margin="normal"
+          placeholder="Enter card holder name"
+          sx={{ color: 'black' }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={termsAccepted}
+              onChange={handleTermsChange}
+              color="primary"
+            />
+          }
+          label="I agree to the Forem2go terms"
+          sx={{ color: 'black', alignItems: 'center' }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={updatesSubscribed}
+              onChange={handleUpdatesChange}
+              color="primary"
+            />
+          }
+          label="Send me product and services updates by email"
+          sx={{ color: 'black', alignItems: 'center' }}
+        />
+        {error && <Typography color="error" mt={2}>{error}</Typography>}
+        <Box display="flex" justifyContent="space-between" width="100%" mt={3}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleCancel}
+            sx={{ flex: 1, mr: 1 }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            sx={{ flex: 1, ml: 1 }}
+          >
+            Submit
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

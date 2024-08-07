@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, FormGroup, Container, Row, Col } from 'reactstrap';
+import { Box, TextField, Button, Typography, Container, Grid } from '@mui/material';
 
 const AboutYourSiteForm = () => {
   const [adminEmail, setAdminEmail] = useState('');
@@ -38,60 +36,86 @@ const AboutYourSiteForm = () => {
   };
 
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      <Typography variant="h5" className="mb-3">About Your Site</Typography>
-      <Form className="w-100" style={{ maxWidth: '400px' }}>
-        <FormGroup>
-          <TextField
-            label="Admin Email"
-            value={adminEmail}
-            onChange={handleAdminEmailChange}
-            fullWidth
-            margin="normal"
-            type="email"
-          />
-        </FormGroup>
-        <FormGroup>
-          <TextField
-            label="Admin Password"
-            value={adminPassword}
-            onChange={handleAdminPasswordChange}
-            fullWidth
-            margin="normal"
-            type="password"
-          />
-        </FormGroup>
-        <FormGroup>
-          <TextField
-            label="Community Name"
-            value={communityName}
-            onChange={handleCommunityNameChange}
-            fullWidth
-            margin="normal"
-          />
-        </FormGroup>
-        <FormGroup>
-          <TextField
-            label="Describe your community in a sentence"
-            value={communityDescription}
-            onChange={handleCommunityDescriptionChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={4}
-          />
-        </FormGroup>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-between">
-            <Button variant="outlined" className="btn btn-outline-secondary" onClick={handleGoBack}>
+    <Container
+      maxWidth="sm"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        backgroundColor: 'background.default',
+        padding: 3
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        About Your Site
+      </Typography>
+      <Box
+        component="form"
+        sx={{
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        <TextField
+          label="Admin Email"
+          value={adminEmail}
+          onChange={handleAdminEmailChange}
+          fullWidth
+          margin="normal"
+          type="email"
+        />
+        <TextField
+          label="Admin Password"
+          value={adminPassword}
+          onChange={handleAdminPasswordChange}
+          fullWidth
+          margin="normal"
+          type="password"
+        />
+        <TextField
+          label="Community Name"
+          value={communityName}
+          onChange={handleCommunityNameChange}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Describe your community in a sentence"
+          value={communityDescription}
+          onChange={handleCommunityDescriptionChange}
+          fullWidth
+          margin="normal"
+          multiline
+          rows={4}
+        />
+        <Grid container spacing={2} sx={{ marginTop: 3 }}>
+          <Grid item xs={6}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={handleGoBack}
+            >
               Go back
             </Button>
-            <Button variant="contained" className="btn btn-primary" onClick={handleContinue}>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleContinue}
+            >
               Continue
             </Button>
-          </Col>
-        </Row>
-      </Form>
+          </Grid>
+        </Grid>
+      </Box>
     </Container>
   );
 };

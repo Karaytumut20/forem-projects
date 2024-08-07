@@ -1,8 +1,6 @@
 "use client";
 import React from 'react';
-import { Box, TextField, MenuItem, Button, Typography } from '@mui/material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, FormGroup, Label, Input, Container, Row, Col } from 'reactstrap';
+import { Box, Button, Typography, Container } from '@mui/material';
 
 const DomainDetails = () => {
   const handleContinue = () => {
@@ -14,31 +12,50 @@ const DomainDetails = () => {
   };
 
   return (
-    <Container className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light">
-      <Typography variant="h5" className="mb-3">You are almost done</Typography>
-      <Typography variant="body1" className="mb-4 text-center">
+    <Container
+      maxWidth="sm"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        backgroundColor: 'background.default',
+        padding: 3
+      }}
+    >
+      <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
+        You are almost done
+      </Typography>
+      <Typography variant="body1" gutterBottom align="center" sx={{ color: 'black' }}>
         You’ll be forwarded to the Stripe page to continue with payment.
       </Typography>
-      <Form className="w-100" style={{ maxWidth: '400px' }}>
-        <Row className="mt-3">
-          <Col className="d-flex justify-content-between">
-            <Button 
-              variant="outlined" 
-              className="btn btn-outline-secondary"
-              onClick={handleGoBack}
-            >
-              Go back
-            </Button>
-            <Button 
-              variant="contained" 
-              className="btn btn-primary" 
-              onClick={handleContinue}
-            >
-              Continue
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: 3
+        }}
+      >
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleGoBack}
+          sx={{ flex: 1, marginRight: 1 }}
+        >
+          Go back
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleContinue}
+          sx={{ flex: 1, marginLeft: 1 }}
+        >
+          Continue
+        </Button>
+      </Box>
     </Container>
   );
 };

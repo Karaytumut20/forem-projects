@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function InfoWithButton() {
   return (
@@ -68,15 +66,16 @@ function InfoWithButton() {
               Launch your community platform effortlessly and leave the technical worries to us
             </Typography>
             <Button
-              style={{
-                background: '#F76A65',
-                border: 'none',
+              variant="contained"
+              sx={{
+                backgroundColor: '#F76A65',
                 width: '200px',
                 height: '50px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
                 color: 'black',
+                textAlign: 'center',
+                '&:hover': {
+                  backgroundColor: '#e65a4f', // Optional: Darker shade on hover
+                },
               }}
             >
               Get your form now

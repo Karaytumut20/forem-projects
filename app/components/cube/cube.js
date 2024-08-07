@@ -1,35 +1,41 @@
-import React from 'react';
-import styles from './cube.module.css';
+import React from "react";
+import { makeStyles } from "@mui/styles";
 
-const steps = [
-    { title: 'Sign up', description: 'Easily set up and use Forem2go in a few mouse clicks.', color: 'rgba(255, 166, 242, 0.8)' },
-    { title: 'Configure domain', description: 'Easily set up and use Forem2go in a few mouse clicks.', color: 'rgba(255, 127, 127, 0.8)' },
-    { title: 'Set up the site', description: 'Easily set up and use Forem2go in a few mouse clicks.', color: 'rgba(141, 255, 115, 0.8)' },
-    { title: 'Enjoy!', description: 'Easily set up and use Forem2go in a few mouse clicks.', color: 'rgba(250, 255, 108, 0.8)' },
-];
+const useStyles = makeStyles({
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    minHeight: "25vh",
+  },
+  cube: {
+    width: "90px",
+    height: "90px",
+    position: "relative",
+    transformStyle: "preserve-3d",
+    transform: "rotateY(-47deg) rotateX(-15deg) rotateZ(15deg) translateX(50%)",
+  },
+  face: {
+    width: "90px",
+    height: "90px",
+    position: "absolute",
+    boxShadow: "inset 0px 0 1px 2px black",
+    border: "0.0001px solid black",
+  },
+});
 
-const Cube = () => {
-    return (
-        <div className={styles.cardsContainer}>
-            {steps.map((step, index) => (
-                <div key={index} className={styles.card}>
-                    <div className={styles.cube}>
-                        <div className={`${styles.face} ${styles.front}`} style={{ backgroundColor: step.color }}>
-                            Front
-                        </div>
-                        <div className={`${styles.face} ${styles.top}`} style={{ backgroundColor: step.color }}>
-                            Top
-                        </div>
-                        <div className={`${styles.face} ${styles.left}`} style={{ backgroundColor: step.color }}>
-                            Side
-                        </div>
-                    </div>
-                    <h3 className={styles.title}>{step.title}</h3>
-                    <p className={styles.description}>{step.description}</p>
-                </div>
-            ))}
-        </div>
-    );
+const Cube = ({ frontColor, topColor, rightColor }) => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.container}>
+      <div className={classes.cube}>
+        <div className={`${classes.face}`} style={{ background: frontColor, transform: 'translateZ(45px)', filter: 'brightness(0.9)' }}></div>
+        <div className={`${classes.face}`} style={{ background: topColor, transform: 'rotateX(90deg) translateZ(45px)', filter: 'brightness(1.36)' }}></div>
+        <div className={`${classes.face}`} style={{ background: rightColor, transform: 'rotateY(90deg) translateZ(45px)', filter: 'brightness(0.9)' }}></div>
+      </div>
+    </div>
+  );
 };
 
 export default Cube;

@@ -1,7 +1,8 @@
-import { db } from './config';
+import { db } from './config'; // Firestore yapılandırması
 import { doc, setDoc, collection } from 'firebase/firestore';
 
-export const addDomainSelection = async (uid, selectedDomain) => {
+// Fonksiyon tanımı
+export const addDomainDetails = async (uid, selectedDomain) => {
   try {
     const collectionName = 'domainSelection';
     const docRef = doc(collection(db, collectionName));
@@ -11,9 +12,10 @@ export const addDomainSelection = async (uid, selectedDomain) => {
       domain: selectedDomain,
       createdAt: new Date().toISOString()
     });
-    console.log('Document successfully written!');
+
+    console.log('Belge başarıyla yazıldı!');
   } catch (error) {
-    console.error('Error writing document: ', error);
+    console.error('Belge yazma hatası: ', error);
     throw error;
   }
-};
+}
