@@ -14,7 +14,7 @@ import CardGrid from './components/cardGrid/cardGrid';
 import CardCopmonent from './components/carcComponent/cardComponenet';
 import TextWithImageComponent from './components/TextWithImageComponent/TextWithImageComponent';
 import FooterCard from './components/footer/footer';
-import CubeCard from './components/CubeCard/cubeCard';
+import CubeCard from './components/cubeCard/cubeCard';
 
 
 export default function Home() {
