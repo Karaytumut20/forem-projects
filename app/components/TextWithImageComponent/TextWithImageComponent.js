@@ -54,9 +54,9 @@ const TextWithImageComponent = () => (
       <Image
         src="/fotograf.png"
         alt="A descriptive alt text for the image"
-        layout="responsive"
         width={600}
         height={300}
+        style={{ width: '100%', height: 'auto' }}
       />
     </Box>
   </Box>
