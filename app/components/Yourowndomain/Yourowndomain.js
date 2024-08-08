@@ -51,7 +51,7 @@ const DomainDetails = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = '/DomainDetails';
+    window.location.href = '/DomainSelection';
   };
 
   return (

@@ -38,7 +38,7 @@ const FreeDomainForm = () => {
   };
 
   const handleGoBack = () => {
-    window.location.href = '/DomainSelection';
+    window.history.back();
   };
 
   return (

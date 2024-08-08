@@ -32,7 +32,7 @@ const AboutYourSiteForm = () => {
   };
 
   const handleGoBack = () => {
-    window.location.href = '/FreeDomainForm';
+    window.history.back();
   };
 
   return (
