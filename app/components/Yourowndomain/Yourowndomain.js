@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, MenuItem, Button, Typography, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
 import { auth } from '../../firebase/config';
-import { addOwnDomainDetails } from '../../firebase/owndomain';  // Correct function import
+import { addOwnDomainDetails } from '../../firebase/owndomain';
 
 const DomainDetails = () => {
   const [domain, setDomain] = useState('');
   const [serverLocation, setServerLocation] = useState('');
   const [error, setError] = useState(false);
-  const [domainError, setDomainError] = useState(''); // Yeni hata durumu
+  const [domainError, setDomainError] = useState('');
+
+  useEffect(() => {
+    const savedDomain = sessionStorage.getItem('domain');
+    const savedServerLocation = sessionStorage.getItem('serverLocation');
+    if (savedDomain) setDomain(savedDomain);
+    if (savedServerLocation) setServerLocation(savedServerLocation);
+  }, []);
 
   const serverLocations = [
     { value: 'us', label: 'United States' },
@@ -17,7 +24,7 @@ const DomainDetails = () => {
 
   const handleDomainChange = (event) => {
     setDomain(event.target.value);
-    setDomainError(''); // Hata mesajını sıfırla
+    setDomainError('');
   };
 
   const handleServerLocationChange = (event) => {
@@ -32,10 +39,10 @@ const DomainDetails = () => {
       try {
         const user = auth.currentUser;
         if (user) {
-          await addOwnDomainDetails(domain, user.uid, serverLocation);  // Correct function call
+          await addOwnDomainDetails(domain, user.uid, serverLocation);
           console.log('Domain:', domain);
           console.log('Server Location:', serverLocation);
-          window.location.href = '/AboutYourSiteForm'; // Redirect to the next form
+          window.location.href = '/AboutYourSiteForm';
         } else {
           console.error('No authenticated user found');
         }
@@ -80,7 +87,7 @@ const DomainDetails = () => {
           onChange={handleDomainChange}
           helperText="For example: mydomain.com or community.mydomain.com"
           margin="normal"
-          error={!!domainError} // Hata varsa kırmızı renkte göster
+          error={!!domainError}
         />
         <FormControl fullWidth margin="normal" error={error}>
           <InputLabel htmlFor="serverLocation">Server location</InputLabel>
