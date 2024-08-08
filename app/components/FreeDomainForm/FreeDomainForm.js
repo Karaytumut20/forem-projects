@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Select, MenuItem, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { addDomainDetails } from '../../firebase/firestore'; // Firestore fonksiyonunuzu içe aktarın
+import { auth } from '../../firebase/config'; // Firebase auth yapılandırmanızı içe aktarın
 
 const FreeDomainForm = () => {
   const [domain, setDomain] = useState('doodle');
@@ -21,13 +23,17 @@ const FreeDomainForm = () => {
     setError(false);
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!serverLocation) {
       setError(true);
     } else {
-      console.log("Domain:", domain);
-      console.log("Server Location:", serverLocation);
-      window.location.href = '/AboutYourSiteForm';
+      const user = auth.currentUser;
+      if (user) {
+        await addDomainDetails(user.uid, domain, serverLocation);
+        window.location.href = '/AboutYourSiteForm';
+      } else {
+        console.error('No authenticated user found');
+      }
     }
   };
 

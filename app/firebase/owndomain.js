@@ -2,13 +2,13 @@ import { db } from './config'; // Firestore yapılandırması
 import { collection, getDocs, query, where, setDoc, doc, orderBy, limit } from 'firebase/firestore'; // orderBy ve limit işlevlerini içe aktarın
 
 // Fonksiyon tanımı
-export const addDomainDetails = async (uid, selectedDomain, serverLocation) => {
+export const addOwnDomainDetails = async (domain, userID, location) => {
   try {
-    const collectionName = 'freeDomain';
+    const collectionName = 'ownDomain';
     const collectionRef = collection(db, collectionName);
 
-    // selectedDomain adının mevcut olup olmadığını kontrol et
-    const q = query(collectionRef, where('domain', '==', selectedDomain));
+    // ownDomain adının mevcut olup olmadığını kontrol et
+    const q = query(collectionRef, where('ownDomain', '==', domain));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -29,9 +29,9 @@ export const addDomainDetails = async (uid, selectedDomain, serverLocation) => {
 
     await setDoc(docRef, {
       ownDomainID: newID,
-      domain: selectedDomain,
-      userID: uid,
-      location: serverLocation,
+      ownDomain: domain,
+      userID: userID,
+      location: location,
       createdAt: new Date().toISOString()
     });
 

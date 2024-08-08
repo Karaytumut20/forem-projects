@@ -48,9 +48,10 @@ const AboutYourSiteForm = () => {
         padding: 3
       }}
     >
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
         About Your Site
       </Typography>
+
       <Box
         component="form"
         sx={{

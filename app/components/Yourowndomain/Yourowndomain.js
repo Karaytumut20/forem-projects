@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Box, TextField, MenuItem, Button, Typography, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
 import { auth } from '../../firebase/config';
-import { addDomainDetails } from '../../firebase/firestore';  // Correct function import
+import { addOwnDomainDetails } from '../../firebase/owndomain';  // Correct function import
 
 const DomainDetails = () => {
   const [domain, setDomain] = useState('');
   const [serverLocation, setServerLocation] = useState('');
   const [error, setError] = useState(false);
+  const [domainError, setDomainError] = useState(''); // Yeni hata durumu
 
   const serverLocations = [
     { value: 'us', label: 'United States' },
@@ -16,6 +17,7 @@ const DomainDetails = () => {
 
   const handleDomainChange = (event) => {
     setDomain(event.target.value);
+    setDomainError(''); // Hata mesajını sıfırla
   };
 
   const handleServerLocationChange = (event) => {
@@ -30,7 +32,7 @@ const DomainDetails = () => {
       try {
         const user = auth.currentUser;
         if (user) {
-          await addDomainDetails(user.uid, domain, serverLocation);  // Correct function call
+          await addOwnDomainDetails(domain, user.uid, serverLocation);  // Correct function call
           console.log('Domain:', domain);
           console.log('Server Location:', serverLocation);
           window.location.href = '/AboutYourSiteForm'; // Redirect to the next form
@@ -38,8 +40,12 @@ const DomainDetails = () => {
           console.error('No authenticated user found');
         }
       } catch (error) {
-        console.error('Error adding document: ', error);
-        alert(`Error: ${error.message}`);
+        if (error.message === 'This domain name is already taken.') {
+          setDomainError('This domain name is already taken. Please choose another one.');
+        } else {
+          console.error('Error adding document: ', error);
+          alert(`Error: ${error.message}`);
+        }
       }
     }
   };
@@ -74,6 +80,7 @@ const DomainDetails = () => {
           onChange={handleDomainChange}
           helperText="For example: mydomain.com or community.mydomain.com"
           margin="normal"
+          error={!!domainError} // Hata varsa kırmızı renkte göster
         />
         <FormControl fullWidth margin="normal" error={error}>
           <InputLabel htmlFor="serverLocation">Server location</InputLabel>
