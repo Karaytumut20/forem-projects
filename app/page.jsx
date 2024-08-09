@@ -45,11 +45,12 @@ export default function Home() {
     <main>
       <ResponsiveAppBar />
       <Box className="relative w-full h-96">
-        <Image
-          src="/img1.png" // Resminsdsa public klasöründeki yolu
+      <Image
+          src="/img1.png" // Resmin public klasöründeki yolu
           alt="Description of image"
           fill // 'layout' prop yerine 'fill' kullanıyoruz
           style={{ objectFit: 'cover' }} // Resmin kapsayıcı alanı tamamen doldurmasını sağlar
+          priority // Add priority property
         />
       </Box>
       <InfoWithButton />
