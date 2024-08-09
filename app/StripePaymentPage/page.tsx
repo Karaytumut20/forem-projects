@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import StripePaymentForm from '../components/StripePaymentForm/StripePaymentForm';
 
-const stripePromise = loadStripe('pk_live_51K1BGdDofnAaOit0Z0CrVz94gALSYnORP8BeaYF8ioBU5W9dTCfssuRGInjLnS3pRULzwqz6hM2CNKUk8S8LVRVw00fbAb2o6e');
+const stripePromise = loadStripe('pk_test_51K1BGdDofnAaOit0kjMh77hpZhdZQpPu1NdswLdPylnu7W6AWE7JmvppAXDPQneS7Wm6Ux9nKh0S9WZ5DWvVnuIY00DoXAh6Se');
 
 export default function StripePaymentPage() {
   return (
