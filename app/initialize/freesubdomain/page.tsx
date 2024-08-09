@@ -1,5 +1,5 @@
 'use client';
-import FreeDomainForm from '../components/FreeDomainForm/FreeDomainForm';
+import FreeDomainForm from '../../components/freesubdomain/freesubdomain';
 
 const FreeDomainPage = () => {
     return (

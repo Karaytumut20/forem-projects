@@ -42,7 +42,7 @@ const DomainDetails = () => {
           await addOwnDomainDetails(domain, user.uid, serverLocation);
           console.log('Domain:', domain);
           console.log('Server Location:', serverLocation);
-          window.location.href = '/AboutYourSiteForm';
+          window.location.href = 'site-info';
         } else {
           console.error('No authenticated user found');
         }
@@ -58,7 +58,7 @@ const DomainDetails = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = '/DomainSelection';
+    window.location.href = 'domain-config';
   };
 
   return (

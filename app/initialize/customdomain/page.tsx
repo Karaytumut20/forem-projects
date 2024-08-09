@@ -1,5 +1,5 @@
 'use client';
-import Yourowndomain from '../components/Yourowndomain/Yourowndomain';
+import Yourowndomain from '../../components/customdomain/customdomain';
 
 const FreeDomainPage = () => {
     return (

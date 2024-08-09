@@ -1,5 +1,5 @@
 'use client';
-import DomainSelections from '../components/DomainSelection/DomainSelection';
+import DomainSelections from '../../components/domain-config/domain-config';
 
 const DomainSelection = () => {
     return (

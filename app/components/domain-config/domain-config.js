@@ -10,9 +10,9 @@ const DomainSelection = () => {
 
   const handleContinue = () => {
     if (selectedDomain === 'free') {
-      window.location.href = '/FreeDomainForm';
+      window.location.href = 'freesubdomain';
     } else {
-      window.location.href = '/Yourowndomain';
+      window.location.href = 'customdomain';
     }
   };
 

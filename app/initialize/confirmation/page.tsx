@@ -1,5 +1,5 @@
 'use client';
-import DomainDetails from '../components/DomainDetails/DomainDetails';
+import DomainDetails from '../../components/confirmation/confirmation';
 
 const AboutYourSiteForm = () => {
     return (

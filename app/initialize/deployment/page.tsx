@@ -1,5 +1,5 @@
 'use client';
-import SiteOnTheWay from '../components/SiteOnTheWay/SiteOnTheWay';
+import SiteOnTheWay from '../../components/deployment/deployment';
 
 const AboutYourSiteForm = () => {
     return (

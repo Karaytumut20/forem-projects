@@ -87,7 +87,7 @@ const StripePaymentForm = () => {
           } else {
             setLoading(false);
             alert('Payment successful!');
-            window.location.href = '/SiteOnTheWay';
+            window.location.href = 'deployment';
           }
         }
       } catch (err) {
@@ -99,7 +99,7 @@ const StripePaymentForm = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = '/DomainDetails';
+    window.location.href = 'confirmation';
   };
 
   return (

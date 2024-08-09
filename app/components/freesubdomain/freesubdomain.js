@@ -30,7 +30,7 @@ const FreeDomainForm = () => {
       const user = auth.currentUser;
       if (user) {
         await addDomainDetails(user.uid, domain, serverLocation);
-        window.location.href = '/AboutYourSiteForm';
+        window.location.href = 'site-info';
       } else {
         console.error('No authenticated user found');
       }
@@ -38,7 +38,7 @@ const FreeDomainForm = () => {
   };
 
   const handleGoBack = () => {
-    window.location.href = '/DomainSelection';
+    window.location.href = 'domain-config';
   };
 
   return (

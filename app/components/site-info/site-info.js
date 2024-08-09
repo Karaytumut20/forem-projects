@@ -28,7 +28,7 @@ const AboutYourSiteForm = () => {
     console.log("Admin Password:", adminPassword);
     console.log("Community Name:", communityName);
     console.log("Community Description:", communityDescription);
-    window.location.href = '/DomainDetails';
+    window.location.href = 'confirmation';
   };
 
   const handleGoBack = () => {

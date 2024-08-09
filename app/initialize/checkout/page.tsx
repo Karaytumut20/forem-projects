@@ -3,7 +3,7 @@
 import { Box, Typography } from '@mui/material';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import StripePaymentForm from '../components/StripePaymentForm/StripePaymentForm';
+import StripePaymentForm from '../../components/checkout/checkout';
 
 const stripePromise = loadStripe('pk_test_51K1BGdDofnAaOit0kjMh77hpZhdZQpPu1NdswLdPylnu7W6AWE7JmvppAXDPQneS7Wm6Ux9nKh0S9WZ5DWvVnuIY00DoXAh6Se');
 

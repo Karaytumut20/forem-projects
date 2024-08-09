@@ -4,11 +4,11 @@ import { Box, Button, Typography, Container } from '@mui/material';
 
 const DomainDetails = () => {
   const handleContinue = () => {
-    window.location.href = '/PaymentDetailsForm';
+    window.location.href = 'checkout';
   };
 
   const handleGoBack = () => {
-    window.location.href = '/AboutYourSiteForm';
+    window.location.href = 'site-info';
   };
 
   return (

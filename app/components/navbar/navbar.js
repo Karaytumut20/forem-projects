@@ -57,9 +57,9 @@ function ResponsiveAppBar() {
 
   const handleNavigate = () => {
     if (userEmail) {
-      window.location.href = '/DomainSelection';
+      window.location.href = 'initialize/domain-config';
     } else {
-      window.location.href = '/sign-in';
+      window.location.href = 'login/sign-in';
     }
   };
 

@@ -1,5 +1,5 @@
 'use client';
-import AboutYourSiteFormComponent from '../components/AboutYourSiteForm/AboutYourSiteForm';
+import AboutYourSiteFormComponent from '../../components/site-info/site-info';
 
 const AboutYourSiteForm = () => {
     return (
