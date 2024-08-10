@@ -1,10 +1,9 @@
+// freesubdomain.js
 import React, { useState } from 'react';
 import { Box, TextField, Select, MenuItem, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
-import { addDomainDetails } from '../../firebase/firestore'; // Firestore fonksiyonunuzu içe aktarın
-import { auth } from '../../firebase/config'; // Firebase auth yapılandırmanızı içe aktarın
 
 const FreeDomainForm = () => {
-  const [domain, setDomain] = useState('doodle');
+  const [domain, setDomain] = useState('');
   const [serverLocation, setServerLocation] = useState('');
   const [error, setError] = useState(false);
   
@@ -23,17 +22,15 @@ const FreeDomainForm = () => {
     setError(false);
   };
 
-  const handleContinue = async () => {
-    if (!serverLocation) {
+  const handleContinue = () => {
+    if (!serverLocation || !domain) {
       setError(true);
     } else {
-      const user = auth.currentUser;
-      if (user) {
-        await addDomainDetails(user.uid, domain, serverLocation);
-        window.location.href = 'site-info';
-      } else {
-        console.error('No authenticated user found');
-      }
+      // Store the data in localStorage
+      localStorage.setItem('community_domain', domain);
+      localStorage.setItem('community_serverLocation', serverLocation);
+      
+      window.location.href = 'site-info';
     }
   };
 
@@ -75,9 +72,9 @@ const FreeDomainForm = () => {
             endAdornment: '.forem2go.org',
           }}
         />
-        <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-          Not available
-        </Typography>
+        {error && <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+          Please enter a domain name
+        </Typography>}
         
         <FormControl fullWidth margin="normal" error={error}>
           <InputLabel id="serverLocation-label">Server location</InputLabel>

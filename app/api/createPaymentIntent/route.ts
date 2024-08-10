@@ -1,4 +1,3 @@
-// app/api/createPaymentIntent/route.ts
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
@@ -6,7 +5,7 @@ const stripe = new Stripe('sk_test_51K1BGdDofnAaOit0bBiLcqMQhhXyJrQxoGrXgkIOcaVZ
 
 export async function POST(req: Request) {
   try {
-    const { paymentMethodId, paymentIntentId } = await req.json();
+    const { paymentMethodId, paymentIntentId, amount } = await req.json(); // amount is now received from client
 
     let paymentIntent;
 
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
     } else {
       // Create a new PaymentIntent if one doesn't exist
       paymentIntent = await stripe.paymentIntents.create({
-        amount: 1000, // Specify the amount here
+        amount, // Use the amount passed from client
         currency: 'usd',
         payment_method: paymentMethodId,
         confirm: true,

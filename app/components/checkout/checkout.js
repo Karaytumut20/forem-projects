@@ -1,5 +1,4 @@
-// app/components/StripePaymentForm/StripePaymentForm.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { Box, Button, Typography, FormControlLabel, Checkbox, TextField } from '@mui/material';
 
@@ -13,6 +12,17 @@ const StripePaymentForm = () => {
   const [updatesSubscribed, setUpdatesSubscribed] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [planName, setPlanName] = useState('');
+  const [planPrice, setPlanPrice] = useState('');
+
+  useEffect(() => {
+    const selectedPlan = JSON.parse(localStorage.getItem('selectedPlan'));
+    if (selectedPlan) {
+      setPlanName(selectedPlan.name);
+      setPlanPrice(selectedPlan.price);
+    }
+  }, []);
 
   const handleCardHolderChange = (event) => {
     setCardHolder(event.target.value);
@@ -42,7 +52,6 @@ const StripePaymentForm = () => {
 
     const cardElement = elements.getElement(CardElement);
 
-    // Create a payment method and get the payment method ID
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: 'card',
       card: cardElement,
@@ -60,24 +69,24 @@ const StripePaymentForm = () => {
       alert(`Payment failed: ${error.message}`);
     } else {
       try {
-        // Send payment method ID to the server to create a payment intent
+        // Convert price to cents
+        const amount = parseFloat(planPrice.replace('$', '')) * 100;
+
         const response = await fetch('/api/createPaymentIntent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+          body: JSON.stringify({ paymentMethodId: paymentMethod.id, amount }),
         });
 
         const paymentIntent = await response.json();
-        console.log('Payment Intent Response:', paymentIntent);
 
         if (paymentIntent.error) {
           setError(paymentIntent.error.message);
           setLoading(false);
           alert(`Payment failed: ${paymentIntent.error.message}`);
         } else {
-          // Confirm the payment on the client side
           const { error: confirmError } = await stripe.confirmCardPayment(paymentIntent.clientSecret);
 
           if (confirmError) {
@@ -112,8 +121,17 @@ const StripePaymentForm = () => {
       bgcolor="background.default"
       p={3}
     >
+      <Button
+        variant="text"
+        color="inherit"
+        sx={{ alignSelf: 'start', marginBottom: 3 }}
+        onClick={handleCancel}
+      >
+        &lt; back
+      </Button>
+
       <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
-        Payment Details
+        Payment details for {planName}
       </Typography>
       <Box
         component="form"
@@ -203,7 +221,7 @@ const StripePaymentForm = () => {
             sx={{ flex: 1, ml: 1 }}
             disabled={loading}
           >
-            {loading ? 'Processing...' : 'Submit'}
+            {loading ? 'Processing...' : `Pay now ${planPrice} to start building your amazing community.`}
           </Button>
         </Box>
       </Box>

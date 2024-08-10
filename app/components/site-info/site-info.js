@@ -1,3 +1,4 @@
+//site-info.js
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Container, Grid } from '@mui/material';
 
@@ -24,10 +25,14 @@ const AboutYourSiteForm = () => {
   };
 
   const handleContinue = () => {
-    console.log("Admin Email:", adminEmail);
-    console.log("Admin Password:", adminPassword);
-    console.log("Community Name:", communityName);
-    console.log("Community Description:", communityDescription);
+    // Store the data in localStorage
+    localStorage.setItem('community_adminEmail', adminEmail);
+    localStorage.setItem('community_password', adminPassword);
+    localStorage.setItem('community_name', communityName);
+    localStorage.setItem('community_desc', communityDescription);
+    localStorage.setItem('community_paymentStatus', 'Pending');
+    localStorage.setItem('community_createdDate', new Date().toISOString());
+    
     window.location.href = 'confirmation';
   };
 
