@@ -1,35 +1,44 @@
-// freesubdomain.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Select, MenuItem, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 const FreeDomainForm = () => {
   const [domain, setDomain] = useState('');
-  const [serverLocation, setServerLocation] = useState('');
+  const [location, setLocation] = useState('');  // Correctly name the state to `location`
   const [error, setError] = useState(false);
-  
+  const [freeDomainID, setFreeDomainID] = useState(1);  // Initialize freeDomainID state
+
   const serverLocations = [
     { value: 'us', label: 'United States' },
     { value: 'eu', label: 'Europe' },
     { value: 'asia', label: 'Asia' },
   ];
 
+  useEffect(() => {
+    // Get the last freeDomainID from localStorage
+    const lastID = localStorage.getItem('freeDomainID');
+    if (lastID) {
+      setFreeDomainID(parseInt(lastID) + 1); // Increment ID by 1
+    }
+  }, []);
+
   const handleDomainChange = (event) => {
     setDomain(event.target.value);
   };
 
   const handleServerLocationChange = (event) => {
-    setServerLocation(event.target.value);
+    setLocation(event.target.value);  // Correctly set the location state
     setError(false);
   };
 
   const handleContinue = () => {
-    if (!serverLocation || !domain) {
+    if (!location || !domain) {
       setError(true);
     } else {
       // Store the data in localStorage
-      localStorage.setItem('community_domain', domain);
-      localStorage.setItem('community_serverLocation', serverLocation);
-      
+      localStorage.setItem('freeDomain', domain);
+      localStorage.setItem('serverLocation', location);  // Store with correct key
+      localStorage.setItem('freeDomainID', freeDomainID); // Store the updated freeDomainID
+
       window.location.href = 'site-info';
     }
   };
@@ -80,7 +89,7 @@ const FreeDomainForm = () => {
           <InputLabel id="serverLocation-label">Server location</InputLabel>
           <Select
             labelId="serverLocation-label"
-            value={serverLocation}
+            value={location}
             onChange={handleServerLocationChange}
             label="Server location"
           >

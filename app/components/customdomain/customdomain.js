@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, MenuItem, Button, Typography, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
 import { auth } from '../../firebase/config';
-import { addOwnDomainDetails } from '../../firebase/owndomain';
+import { db } from '../../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 const DomainDetails = () => {
   const [domain, setDomain] = useState('');
@@ -37,15 +38,24 @@ const DomainDetails = () => {
       setError(true);
     } else {
       try {
-        const user = auth.currentUser;
-        if (user) {
-          await addOwnDomainDetails(domain, user.uid, serverLocation);
-          console.log('Domain:', domain);
-          console.log('Server Location:', serverLocation);
-          window.location.href = 'site-info';
-        } else {
-          console.error('No authenticated user found');
-        }
+        // Fetch the current count of documents in ownDomainTable
+        const ownDomainCollection = collection(db, 'ownDomainTable');
+        const ownDomainSnapshot = await getDocs(ownDomainCollection);
+        const ownDomainCount = ownDomainSnapshot.size;
+
+        // Set ownDomainID as the next available ID
+        const ownDomainID = (ownDomainCount + 1).toString();
+
+        // Store domain details in localStorage for use in Confirmation component
+        localStorage.setItem('ownDomain', domain);
+        localStorage.setItem('ownDomainID', ownDomainID);
+        localStorage.setItem('ownServerLocation', serverLocation);
+
+        console.log('Domain:', domain);
+        console.log('Server Location:', serverLocation);
+        console.log('Own Domain ID:', ownDomainID);
+
+        window.location.href = 'site-info';  // Navigate to Confirmation page
       } catch (error) {
         if (error.message === 'This domain name is already taken.') {
           setDomainError('This domain name is already taken. Please choose another one.');

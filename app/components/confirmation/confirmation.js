@@ -1,30 +1,114 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { db } from '../../firebase/config';
+import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
 
-const CombinedComponent = () => {
+const Confirmation = () => {
   const [selectedPlan, setSelectedPlan] = useState('basic');
+  const [freeDomain, setFreeDomain] = useState('0');
+  const [location, setLocation] = useState('0');
+  const [ownDomain, setOwnDomain] = useState('0');
+  const [ownServerLocation, setOwnServerLocation] = useState('0');
 
-  const communityDomain = localStorage.getItem('community_domain');
-  const serverLocation = localStorage.getItem('community_serverLocation');
-  const adminEmail = localStorage.getItem('community_adminEmail');
-  const adminPassword = localStorage.getItem('community_password');
-  const communityName = localStorage.getItem('community_name');
-  const communityDescription = localStorage.getItem('community_desc');
-  const paymentStatus = localStorage.getItem('community_paymentStatus');
-  const createdDate = localStorage.getItem('community_createdDate');
+  useEffect(() => {
+    const storedFreeDomain = localStorage.getItem('freeDomain') || '0';
+    const storedFreeLocation = localStorage.getItem('serverLocation') || '0';
+    const storedOwnDomain = localStorage.getItem('ownDomain') || '0';
+    const storedOwnLocation = localStorage.getItem('ownServerLocation') || '0';
+    const selectedDomainType = localStorage.getItem('selectedDomainType') || 'free';
+
+    if (selectedDomainType === 'free') {
+      setFreeDomain(storedFreeDomain);
+      setLocation(storedFreeLocation);
+      setOwnDomain('0');  // Reset own domain to 0
+      setOwnServerLocation('0');  // Reset own server location to 0
+    } else if (selectedDomainType === 'own') {
+      setFreeDomain('0');  // Reset free domain to 0
+      setLocation('0');  // Reset free server location to 0
+      setOwnDomain(storedOwnDomain);
+      setOwnServerLocation(storedOwnLocation);
+    }
+  }, []);
+
+  const adminEmail = localStorage.getItem('community_adminEmail') || '0';
+  const adminPassword = localStorage.getItem('community_password') || '0';
+  const communityName = localStorage.getItem('community_name') || '0';
+  const communityDescription = localStorage.getItem('community_desc') || '0';
+  const paymentStatus = localStorage.getItem('community_paymentStatus') || '0';
+  const createdDate = localStorage.getItem('community_createdDate') || new Date().toISOString();
+  const freeDomainID = localStorage.getItem('freeDomainID') || '0';
+  let ownDomainID = localStorage.getItem('ownDomainID') || '0';
+  const userID = localStorage.getItem('userID') || '0';
 
   const handleGoBack = () => {
     window.history.back();
   };
-  const handleContinue = () => {
+
+  const handleSaveToFirestore = async () => {
+    try {
+      const ownDomainCollection = collection(db, 'ownDomainTable');
+      const ownDomainSnapshot = await getDocs(ownDomainCollection);
+      const ownDomainCount = ownDomainSnapshot.size;
+
+      // Assign a new ownDomainID if it is '0'
+      ownDomainID = ownDomainID === '0' ? (ownDomainCount + 1).toString() : ownDomainID;
+
+      const communityData = {
+        AdminEmail: adminEmail,
+        AdminPassword: adminPassword,
+        CommunityDesc: communityDescription,
+        CommunityID: '0',
+        CommunityName: communityName,
+        CreatedDate: createdDate,
+        PaymentStatus: paymentStatus,
+        SelectedPlan: selectedPlan,
+        freeDomain: freeDomain,
+        freeDomainID: freeDomainID,
+        ownDomainID: ownDomainID,
+        userID: userID
+      };
+
+      if (ownDomain !== '0') {
+        const ownDomainData = {
+          ownDomainID: ownDomainID,
+          Domain: ownDomain,
+          userID: userID,
+          location: ownServerLocation
+        };
+        await setDoc(doc(db, 'ownDomainTable', ownDomainID || 'default_ownDomainID'), ownDomainData);
+      }
+
+      if (freeDomain !== '0') {
+        const freeDomainData = {
+          freeDomainID: freeDomainID,
+          freeDomain: freeDomain,
+          userID: userID,
+          location: location
+        };
+        await setDoc(doc(db, 'freeDomainTable', freeDomainID || 'default_freeDomainID'), freeDomainData);
+      }
+
+      await setDoc(doc(db, 'communityTable', communityName || 'default_name'), communityData);
+
+      console.log('Data saved to Firestore successfully');
+    } catch (error) {
+      console.error('Error saving data to Firestore:', error);
+    }
+  };
+
+  const handleContinue = async () => {
     if (selectedPlan) {
       const planDetails = {
         name: selectedPlan === 'basic' ? 'Basic Plan' : 'Standard Plan',
         price: selectedPlan === 'basic' ? '$59' : '$99'
       };
       localStorage.setItem('selectedPlan', JSON.stringify(planDetails));
-      window.location.href = 'checkout';
+
+      await handleSaveToFirestore(); // Save data to Firestore
+
+      window.location.href = 'checkout'; // Redirect to checkout page
     }
   };
 
@@ -49,8 +133,12 @@ const CombinedComponent = () => {
         You're almost there! Let's make sure everything looks perfect before we move on to the payment page. Please review your information below:
       </Typography>
       <Box bgcolor="background.paper" p={3} borderRadius={2} boxShadow={3} mb={4}>
-        <Typography variant="h6">Domain: {communityDomain}.forem2go.org</Typography>
-        <Typography variant="h6">Server Location: {serverLocation}</Typography>
+      <Typography variant="h6">
+  Free Domain: {freeDomain !== '0' ? `${freeDomain}.forem2go.org` : 'N/A'}
+</Typography>
+        <Typography variant="h6">Free Domain Location: {location !== '0' ? location : 'N/A'}</Typography>
+        <Typography variant="h6">Own Domain: {ownDomain !== '0' ? ownDomain : 'N/A'}</Typography>
+        <Typography variant="h6">Own Domain Location: {ownServerLocation !== '0' ? ownServerLocation : 'N/A'}</Typography>
         <Typography variant="h6">Community Name: {communityName}</Typography>
         <Typography variant="h6">Admin Email: {adminEmail}</Typography>
         <Typography variant="h6">Admin Password: {adminPassword}</Typography>
@@ -132,4 +220,4 @@ const CombinedComponent = () => {
   );
 };
 
-export default CombinedComponent;
+export default Confirmation;

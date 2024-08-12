@@ -10,8 +10,14 @@ const DomainSelection = () => {
 
   const handleContinue = () => {
     if (selectedDomain === 'free') {
+      localStorage.setItem('selectedDomainType', 'free');
+      localStorage.setItem('freeDomainStatus', '1');
+      localStorage.setItem('ownDomainStatus', '0');
       window.location.href = 'freesubdomain';
     } else {
+      localStorage.setItem('selectedDomainType', 'own');
+      localStorage.setItem('freeDomainStatus', '0');
+      localStorage.setItem('ownDomainStatus', '1');
       window.location.href = 'customdomain';
     }
   };
