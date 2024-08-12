@@ -58,7 +58,7 @@ const DomainDetails = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = 'domain-config';
+    window.history.back();
   };
 
   return (

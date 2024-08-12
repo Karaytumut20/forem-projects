@@ -35,7 +35,7 @@ const FreeDomainForm = () => {
   };
 
   const handleGoBack = () => {
-    window.location.href = 'domain-config';
+    window.history.back();
   };
 
   return (

@@ -15,9 +15,8 @@ const CombinedComponent = () => {
   const createdDate = localStorage.getItem('community_createdDate');
 
   const handleGoBack = () => {
-    window.location.href = 'site-info';
+    window.history.back();
   };
-
   const handleContinue = () => {
     if (selectedPlan) {
       const planDetails = {

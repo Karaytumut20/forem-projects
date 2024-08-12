@@ -108,7 +108,7 @@ const StripePaymentForm = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = 'confirmation';
+    window.history.back();
   };
 
   return (
