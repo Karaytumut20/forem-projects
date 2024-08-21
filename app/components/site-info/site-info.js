@@ -1,4 +1,3 @@
-//site-info.js
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Container, Grid } from '@mui/material';
 
@@ -33,6 +32,7 @@ const AboutYourSiteForm = () => {
     localStorage.setItem('community_paymentStatus', 'Pending');
     localStorage.setItem('community_createdDate', new Date().toISOString());
     
+    // Navigate to the confirmation page
     window.location.href = 'confirmation';
   };
 
