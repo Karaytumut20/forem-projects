@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,120 +10,138 @@ const Confirmation = () => {
   const [location, setLocation] = useState('0');
   const [ownDomain, setOwnDomain] = useState('0');
   const [ownServerLocation, setOwnServerLocation] = useState('0');
+  const [adminEmail, setAdminEmail] = useState('0');
+  const [adminPassword, setAdminPassword] = useState('0');
+  const [communityName, setCommunityName] = useState('0');
+  const [communityDescription, setCommunityDescription] = useState('0');
+  const [paymentStatus, setPaymentStatus] = useState('0');
+  const [createdDate, setCreatedDate] = useState(new Date().toISOString());
+  const [freeDomainID, setFreeDomainID] = useState('0');
+  const [ownDomainID, setOwnDomainID] = useState('0');
+  const [userID, setUserID] = useState('0');
 
   useEffect(() => {
-    const storedFreeDomain = localStorage.getItem('freeDomain') || '0';
-    const storedFreeLocation = localStorage.getItem('serverLocation') || '0';
-    const storedOwnDomain = localStorage.getItem('ownDomain') || '0';
-    const storedOwnLocation = localStorage.getItem('ownServerLocation') || '0';
-    const selectedDomainType = localStorage.getItem('selectedDomainType') || 'free';
+    if (typeof window !== 'undefined') {
+      const storedFreeDomain = localStorage.getItem('freeDomain') || '0';
+      const storedFreeLocation = localStorage.getItem('serverLocation') || '0';
+      const storedOwnDomain = localStorage.getItem('ownDomain') || '0';
+      const storedOwnLocation = localStorage.getItem('ownServerLocation') || '0';
+      const selectedDomainType = localStorage.getItem('selectedDomainType') || 'free';
 
-    if (selectedDomainType === 'free') {
-      setFreeDomain(storedFreeDomain);
-      setLocation(storedFreeLocation);
-      setOwnDomain('0');  // Reset own domain to 0
-      setOwnServerLocation('0');  // Reset own server location to 0
-    } else if (selectedDomainType === 'own') {
-      setFreeDomain('0');  // Reset free domain to 0
-      setLocation('0');  // Reset free server location to 0
-      setOwnDomain(storedOwnDomain);
-      setOwnServerLocation(storedOwnLocation);
+      if (selectedDomainType === 'free') {
+        setFreeDomain(storedFreeDomain);
+        setLocation(storedFreeLocation);
+        setOwnDomain('0'); // Kendi alan adını sıfırla
+        setOwnServerLocation('0'); // Kendi sunucu konumunu sıfırla
+      } else if (selectedDomainType === 'own') {
+        setFreeDomain('0'); // Ücretsiz alan adını sıfırla
+        setLocation('0'); // Ücretsiz sunucu konumunu sıfırla
+        setOwnDomain(storedOwnDomain);
+        setOwnServerLocation(storedOwnLocation);
+      }
+
+      setAdminEmail(localStorage.getItem('community_adminEmail') || '0');
+      setAdminPassword(localStorage.getItem('community_password') || '0');
+      setCommunityName(localStorage.getItem('community_name') || '0');
+      setCommunityDescription(localStorage.getItem('community_desc') || '0');
+      setPaymentStatus(localStorage.getItem('community_paymentStatus') || '0');
+      setCreatedDate(localStorage.getItem('community_createdDate') || new Date().toISOString());
+      setFreeDomainID(localStorage.getItem('freeDomainID') || '0');
+      setOwnDomainID(localStorage.getItem('ownDomainID') || '0');
+      setUserID(localStorage.getItem('userID') || '0');
     }
   }, []);
 
-  const adminEmail = localStorage.getItem('community_adminEmail') || '0';
-  const adminPassword = localStorage.getItem('community_password') || '0';
-  const communityName = localStorage.getItem('community_name') || '0';
-  const communityDescription = localStorage.getItem('community_desc') || '0';
-  const paymentStatus = localStorage.getItem('community_paymentStatus') || '0';
-  const createdDate = localStorage.getItem('community_createdDate') || new Date().toISOString();
-  const freeDomainID = localStorage.getItem('freeDomainID') || '0';
-  let ownDomainID = localStorage.getItem('ownDomainID') || '0';
-  const userID = localStorage.getItem('userID') || '0';
-
   const handleGoBack = () => {
-    window.history.back();
+    if (typeof window !== 'undefined') {
+      window.history.back();
+    }
   };
 
   const handleSaveToFirestore = async () => {
     try {
-        let ownDomainID = localStorage.getItem('ownDomainID') || '0';
-        let freeDomainID = localStorage.getItem('freeDomainID') || '0';
+      let currentOwnDomainID = ownDomainID;
+      let currentFreeDomainID = freeDomainID;
 
-        if (ownDomain !== '0') {
-            const ownDomainCollection = collection(db, 'ownDomainTable');
-            const ownDomainSnapshot = await getDocs(ownDomainCollection);
-            const ownDomainCount = ownDomainSnapshot.size;
+      if (ownDomain !== '0') {
+        const ownDomainCollection = collection(db, 'ownDomainTable');
+        const ownDomainSnapshot = await getDocs(ownDomainCollection);
+        const ownDomainCount = ownDomainSnapshot.size;
 
-            // Assign a new ownDomainID if it is '0'
-            ownDomainID = (ownDomainCount + 1).toString();
+        // Yeni bir ownDomainID atayın
+        currentOwnDomainID = (ownDomainCount + 1).toString();
 
-            const ownDomainData = {
-                ownDomainID: ownDomainID,
-                Domain: ownDomain,
-                userID: userID,
-                location: ownServerLocation
-            };
-            await setDoc(doc(db, 'ownDomainTable', ownDomainID || 'default_ownDomainID'), ownDomainData);
-
-            // Reset freeDomainID to 0
-            freeDomainID = '0';
-        }
-
-        if (freeDomain !== '0') {
-            const freeDomainCollection = collection(db, 'freeDomainTable');
-            const freeDomainSnapshot = await getDocs(freeDomainCollection);
-            const freeDomainCount = freeDomainSnapshot.size;
-
-            // Assign a new freeDomainID if it is '0'
-            freeDomainID = (freeDomainCount + 1).toString();
-
-            const freeDomainData = {
-                freeDomainID: freeDomainID,
-                freeDomain: freeDomain,
-                userID: userID,
-                location: location
-            };
-            await setDoc(doc(db, 'freeDomainTable', freeDomainID || 'default_freeDomainID'), freeDomainData);
-
-            // Reset ownDomainID to 0
-            ownDomainID = '0';
-        }
-
-        const communityData = {
-            AdminEmail: adminEmail,
-            AdminPassword: adminPassword,
-            CommunityDesc: communityDescription,
-            CommunityID: '0',
-            CommunityName: communityName,
-            CreatedDate: createdDate,
-            PaymentStatus: paymentStatus,
-            SelectedPlan: selectedPlan,
-            freeDomain: freeDomain,
-            freeDomainID: freeDomainID,
-            ownDomainID: ownDomainID,
-            userID: userID
+        const ownDomainData = {
+          ownDomainID: currentOwnDomainID,
+          Domain: ownDomain,
+          userID: userID,
+          location: ownServerLocation,
         };
+        await setDoc(doc(db, 'ownDomainTable', currentOwnDomainID || 'default_ownDomainID'), ownDomainData);
 
-        await setDoc(doc(db, 'communityTable', communityName || 'default_name'), communityData);
+        // freeDomainID'yi sıfırla
+        currentFreeDomainID = '0';
+      }
 
-        console.log('Data saved to Firestore successfully');
+      if (freeDomain !== '0') {
+        const freeDomainCollection = collection(db, 'freeDomainTable');
+        const freeDomainSnapshot = await getDocs(freeDomainCollection);
+        const freeDomainCount = freeDomainSnapshot.size;
+
+        // Yeni bir freeDomainID atayın
+        currentFreeDomainID = (freeDomainCount + 1).toString();
+
+        const freeDomainData = {
+          freeDomainID: currentFreeDomainID,
+          freeDomain: freeDomain,
+          userID: userID,
+          location: location,
+        };
+        await setDoc(doc(db, 'freeDomainTable', currentFreeDomainID || 'default_freeDomainID'), freeDomainData);
+
+        // ownDomainID'yi sıfırla
+        currentOwnDomainID = '0';
+      }
+
+      const communityData = {
+        AdminEmail: adminEmail,
+        AdminPassword: adminPassword,
+        CommunityDesc: communityDescription,
+        CommunityID: '0',
+        CommunityName: communityName,
+        CreatedDate: createdDate,
+        PaymentStatus: paymentStatus,
+        SelectedPlan: selectedPlan,
+        freeDomain: freeDomain,
+        freeDomainID: currentFreeDomainID,
+        ownDomainID: currentOwnDomainID,
+        userID: userID,
+      };
+
+      await setDoc(doc(db, 'communityTable', communityName || 'default_name'), communityData);
+
+      console.log('Veriler Firestore\'a başarıyla kaydedildi');
     } catch (error) {
-        console.error('Error saving data to Firestore:', error);
+      console.error('Veriler Firestore\'a kaydedilirken hata oluştu:', error);
     }
-};
+  };
 
   const handleContinue = async () => {
     if (selectedPlan) {
       const planDetails = {
         name: selectedPlan === 'basic' ? 'Basic Plan' : 'Standard Plan',
-        price: selectedPlan === 'basic' ? '$59' : '$99'
+        price: selectedPlan === 'basic' ? '$59' : '$99',
       };
-      localStorage.setItem('selectedPlan', JSON.stringify(planDetails));
 
-      await handleSaveToFirestore(); // Save data to Firestore
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('selectedPlan', JSON.stringify(planDetails));
+      }
 
-      window.location.href = 'checkout'; // Redirect to checkout page
+      await handleSaveToFirestore(); // Verileri Firestore'a kaydet
+
+      if (typeof window !== 'undefined') {
+        window.location.href = 'checkout'; // Ödeme sayfasına yönlendirme
+      }
     }
   };
 
@@ -143,27 +160,27 @@ const Confirmation = () => {
       p={3}
     >
       <Typography variant="h4" gutterBottom>
-        Review Your Details Before Proceeding to Payment
+        Ödeme İşlemine Geçmeden Önce Bilgilerinizi Gözden Geçirin
       </Typography>
       <Typography variant="body1" sx={{ marginBottom: 2 }}>
-        You're almost there! Let's make sure everything looks perfect before we move on to the payment page. Please review your information below:
+        Ödeme sayfasına geçmeden önce, her şeyin mükemmel göründüğünden emin olalım. Lütfen aşağıdaki bilgilerinizi gözden geçirin:
       </Typography>
       <Box bgcolor="background.paper" p={3} borderRadius={2} boxShadow={3} mb={4}>
-      <Typography variant="h6">
-  Free Domain: {freeDomain !== '0' ? `${freeDomain}.forem2go.org` : 'N/A'}
-</Typography>
-        <Typography variant="h6">Free Domain Location: {location !== '0' ? location : 'N/A'}</Typography>
-        <Typography variant="h6">Own Domain: {ownDomain !== '0' ? ownDomain : 'N/A'}</Typography>
-        <Typography variant="h6">Own Domain Location: {ownServerLocation !== '0' ? ownServerLocation : 'N/A'}</Typography>
-        <Typography variant="h6">Community Name: {communityName}</Typography>
-        <Typography variant="h6">Admin Email: {adminEmail}</Typography>
-        <Typography variant="h6">Admin Password: {adminPassword}</Typography>
-        <Typography variant="h6">Community Description: {communityDescription}</Typography>
-        <Typography variant="h6">Payment Status: {paymentStatus}</Typography>
-        <Typography variant="h6">Created Date: {new Date(createdDate).toLocaleString()}</Typography>
+        <Typography variant="h6">
+          Ücretsiz Alan Adı: {freeDomain !== '0' ? `${freeDomain}.forem2go.org` : 'N/A'}
+        </Typography>
+        <Typography variant="h6">Ücretsiz Alan Adı Konumu: {location !== '0' ? location : 'N/A'}</Typography>
+        <Typography variant="h6">Kendi Alan Adı: {ownDomain !== '0' ? ownDomain : 'N/A'}</Typography>
+        <Typography variant="h6">Kendi Alan Adı Konumu: {ownServerLocation !== '0' ? ownServerLocation : 'N/A'}</Typography>
+        <Typography variant="h6">Topluluk Adı: {communityName}</Typography>
+        <Typography variant="h6">Yönetici E-postası: {adminEmail}</Typography>
+        <Typography variant="h6">Yönetici Şifresi: {adminPassword}</Typography>
+        <Typography variant="h6">Topluluk Açıklaması: {communityDescription}</Typography>
+        <Typography variant="h6">Ödeme Durumu: {paymentStatus}</Typography>
+        <Typography variant="h6">Oluşturma Tarihi: {new Date(createdDate).toLocaleString()}</Typography>
       </Box>
 
-      {/* Plan Cards Section with Radio Buttons */}
+      {/* Plan Kartları Bölümü */}
       <div className="card mb-3" style={{ maxWidth: '600px', border: '1px solid #ddd' }}>
         <div className="card-body d-flex align-items-center">
           <input
@@ -177,13 +194,13 @@ const Confirmation = () => {
             style={{ transform: 'scale(1.5)' }}
           />
           <div>
-            <h5 className="card-title mb-1">$59 <small className="text-muted">Per month</small></h5>
-            <p className="card-text mb-1">Basic Plan</p>
+            <h5 className="card-title mb-1">$59 <small className="text-muted">Aylık</small></h5>
+            <p className="card-text mb-1">Temel Plan</p>
             <ul className="list-unstyled" style={{ fontSize: '14px', lineHeight: '1.5' }}>
-              <li>• Unlimited members</li>
-              <li>• Unlimited staff</li>
-              <li>• 50k monthly pageviews</li>
-              <li>• community.heliotrops.org domain</li>
+              <li>• Sınırsız üye</li>
+              <li>• Sınırsız personel</li>
+              <li>• Aylık 50k sayfa görüntüleme</li>
+              <li>• community.heliotrops.org alan adı</li>
             </ul>
           </div>
         </div>
@@ -202,13 +219,13 @@ const Confirmation = () => {
             style={{ transform: 'scale(1.5)' }}
           />
           <div>
-            <h5 className="card-title mb-1">$99 <small className="text-muted">Per month</small></h5>
-            <p className="card-text mb-1">Standard Plan</p>
+            <h5 className="card-title mb-1">$99 <small className="text-muted">Aylık</small></h5>
+            <p className="card-text mb-1">Standart Plan</p>
             <ul className="list-unstyled" style={{ fontSize: '14px', lineHeight: '1.5' }}>
-              <li>• Unlimited members</li>
-              <li>• Unlimited staff</li>
-              <li>• 50k monthly pageviews</li>
-              <li>• community.heliotrops.org domain</li>
+              <li>• Sınırsız üye</li>
+              <li>• Sınırsız personel</li>
+              <li>• Aylık 50k sayfa görüntüleme</li>
+              <li>• community.heliotrops.org alan adı</li>
             </ul>
           </div>
         </div>
@@ -221,7 +238,7 @@ const Confirmation = () => {
           onClick={handleGoBack}
           sx={{ flex: 1, mr: 1 }}
         >
-          Go back
+          Geri Dön
         </Button>
         <Button
           variant="contained"
@@ -229,7 +246,7 @@ const Confirmation = () => {
           onClick={handleContinue}
           sx={{ flex: 1, ml: 1 }}
         >
-          Continue
+          Devam Et
         </Button>
       </Box>
     </Box>

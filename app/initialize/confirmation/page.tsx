@@ -7,4 +7,4 @@ const AboutYourSiteForm = () => {
     );
 };
 
-export default DomainDetails;
+export default AboutYourSiteForm;
