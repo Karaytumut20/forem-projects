@@ -1,11 +1,12 @@
 'use client';
 
-const Dashboard = () => {
+import React from 'react';
+import Dashboard from '../../components/dashboard/dashboard'; // Eğer Dashboard component'ini farklı bir klasörde tutuyorsanız, ilgili yolu güncelleyin.
+
+const Page = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <h1 className="text-4xl font-bold text-black">Welcome to the Dashboard</h1>
-    </div>
+    <Dashboard />
   );
 };
 
-export default Dashboard;
+export default Page;

@@ -59,7 +59,7 @@ function ResponsiveAppBar() {
     if (userEmail) {
       window.location.href = 'initialize/domain-config';
     } else {
-      window.location.href = 'login/sign-in';
+      window.location.href = 'signin';
     }
   };
 
@@ -68,7 +68,7 @@ function ResponsiveAppBar() {
       .then(() => {
         setUserEmail('');
         handleCloseUserMenu();
-        window.location.href = '/sign-in'; // Redirect to sign-in page after logout
+        window.location.href = '/signin'; // Redirect to sign-in page after logout
       })
       .catch((error) => {
         console.error('Error signing out: ', error);

@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from 'react';
+import { Box, CssBaseline, Drawer, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { collection, getDocs } from 'firebase/firestore'; // Import for fetching multiple documents
+import { auth, db } from '../../firebase/config'; // Ensure Firebase config is correctly imported
+import ResponsiveAppBar from '../navbar/navbar';
+
+const drawerWidth = 240;
+
+const Dashboard = () => {
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userSurname, setUserSurname] = useState('');
+  const [userData, setUserData] = useState([]);
+  
+  const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        setUserEmail(user.email);
+        const userCollectionRef = collection(db, 'userTable'); // Adjust to match your Firebase structure
+        const querySnapshot = await getDocs(userCollectionRef);
+
+        querySnapshot.forEach((doc) => {
+          if (doc.data().email === user.email) {
+            const userData = doc.data();
+            setUserName(userData.name || '');
+            setUserSurname(userData.surname || '');
+            setUserData(userData);
+          }
+        });
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            backgroundColor: '#f7f7f7',
+            borderRight: '1px solid #ddd',
+          },
+        }}
+      >
+        <Toolbar />
+        <Divider />
+        <List>
+          <ListItem button>
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" sx={{ color: 'black' }} />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Account" sx={{ color: 'black' }} />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" sx={{ color: 'black' }} />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" sx={{ color: 'black' }} />
+          </ListItem>
+        </List>
+        <Divider />
+      </Drawer>
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.default',
+          p: 3,
+          minHeight: '100vh',
+        }}
+      >
+        <ResponsiveAppBar />
+
+        <Toolbar />
+        <Typography variant="h4" gutterBottom sx={{ color: 'black' }}>
+          Welcome to Your Dashboard
+        </Typography>
+        {userName && userSurname && (
+          <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
+            Welcome, {userName} {userSurname}
+          </Typography>
+        )}
+
+        <Box
+          sx={{
+            bgcolor: '#fff',
+            p: 3,
+            borderRadius: 2,
+            boxShadow: 3,
+            mt: 4,
+          }}
+        >
+          <Typography variant="h6" sx={{ color: 'black' }}>User Information</Typography>
+          <Typography variant="body1" sx={{ color: 'black' }}><strong>Name:</strong> {userName}</Typography>
+          <Typography variant="body1" sx={{ color: 'black' }}><strong>Surname:</strong> {userSurname}</Typography>
+          <Typography variant="body1" sx={{ color: 'black' }}><strong>Email:</strong> {userEmail}</Typography>
+        </Box>
+
+        <Typography variant="body1" sx={{ mt: 4, color: 'black' }}>
+          This is your main dashboard where you can manage your Forem services, view statistics, and update your account information. Use the side menu to navigate through different sections.
+        </Typography>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 3,
+            mt: 4,
+          }}
+        >
+          <Box
+            sx={{
+              bgcolor: '#fff',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: 'black' }}>Total Users</Typography>
+            <Typography variant="h4" sx={{ color: 'black' }}>1,234</Typography>
+            <Typography variant="body2" color="textSecondary">Active Users in your Community</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              bgcolor: '#fff',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: 'black' }}>Revenue</Typography>
+            <Typography variant="h4" sx={{ color: 'black' }}>$12,345</Typography>
+            <Typography variant="body2" color="textSecondary">Monthly Revenue from Subscriptions</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              bgcolor: '#fff',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: 'black' }}>New Signups</Typography>
+            <Typography variant="h4" sx={{ color: 'black' }}>56</Typography>
+            <Typography variant="body2" color="textSecondary">New Users This Month</Typography>
+          </Box>
+
+          <Box
+            sx={{
+              bgcolor: '#fff',
+              p: 3,
+              borderRadius: 2,
+              boxShadow: 3,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: 'black' }}>Support Tickets</Typography>
+            <Typography variant="h4" sx={{ color: 'black' }}>12</Typography>
+            <Typography variant="body2" color="textSecondary">Pending Support Tickets</Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default Dashboard;
