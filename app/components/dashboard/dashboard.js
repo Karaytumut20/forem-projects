@@ -5,9 +5,26 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { collection, getDocs } from 'firebase/firestore'; // Import for fetching multiple documents
-import { auth, db } from '../../firebase/config'; // Ensure Firebase config is correctly imported
 import ResponsiveAppBar from '../navbar/navbar';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDLCmASch8Tet2R1MDnt9skETz6s2ZiIY8",
+  authDomain: "forem-c78dc.firebaseapp.com",
+  projectId: "forem-c78dc",
+  storageBucket: "forem-c78dc.appspot.com",
+  messagingSenderId: "62561986265",
+  appId: "1:62561986265:web:dd455856dba47ec90f00c8",
+  measurementId: "G-9G3GJCB5GR"
+};
+
+// Initialize Firebase
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const drawerWidth = 240;
 
@@ -16,26 +33,28 @@ const Dashboard = () => {
   const [userName, setUserName] = useState('');
   const [userSurname, setUserSurname] = useState('');
   const [userData, setUserData] = useState([]);
-  
+
   const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        setUserEmail(user.email);
-        const userCollectionRef = collection(db, 'userTable'); // Adjust to match your Firebase structure
-        const querySnapshot = await getDocs(userCollectionRef);
-
-        querySnapshot.forEach((doc) => {
-          if (doc.data().email === user.email) {
-            const userData = doc.data();
-            setUserName(userData.name || '');
-            setUserSurname(userData.surname || '');
-            setUserData(userData);
-          }
-        });
-      }
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          setUserEmail(user.email);
+          
+          const userCollectionRef = collection(db, 'userTable'); // Replace 'userTable' with your actual collection name
+          const querySnapshot = await getDocs(userCollectionRef);
+          
+          querySnapshot.forEach((doc) => {
+            if (doc.data().email === user.email) {
+              const userData = doc.data();
+              setUserName(userData.name || '');
+              setUserSurname(userData.surname || '');
+              setUserData(userData);
+            }
+          });
+        }
+      });
     };
 
     fetchUserData();
