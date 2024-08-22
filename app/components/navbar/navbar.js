@@ -169,13 +169,13 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
             <Button
-              sx={{ mr: 2, color: '#000', background: '#ffd740', fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }}
+              sx={{ mr: 2, color: '#000', background: '#ffd740', fontSize: isExtraSmallScreen ? '8px' : isSmallScreen ? '9px' : '11px' }}
               onClick={() => handleNavigate('/sign-in')}
             >
               Live demo
             </Button>
             <Button
-              sx={{ mr: 2, color: '#000', fontSize: isExtraSmallScreen ? '10px' : isSmallScreen ? '12px' : '14px' }}
+              sx={{ mr: 2, color: '#000', fontSize: isExtraSmallScreen ? '8px' : isSmallScreen ? '9px' : '11px' }}
               onClick={handleNavigate}
             >
               Get started now

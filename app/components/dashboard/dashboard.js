@@ -9,6 +9,8 @@ import ResponsiveAppBar from '../navbar/navbar';
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import './dashboard.css';
+import SwipeableTemporaryDrawer from '../sidebar/sidebar';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -26,7 +28,7 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const Dashboard = () => {
   const [userEmail, setUserEmail] = useState('');
@@ -75,63 +77,18 @@ const Dashboard = () => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: drawerWidth,
-            boxSizing: 'border-box',
-            backgroundColor: '#f7f7f7',
-            borderRight: '1px solid #ddd',
-          },
-        }}
-      >
-        <Toolbar />
-        <Divider />
-        <List>
-          <ListItem button component="a" href="/">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" sx={{ color: 'black' }} />
-          </ListItem>
-          <ListItem button component="a" href="/dashboard">
-            <ListItemIcon>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" sx={{ color: 'black' }} />
-          </ListItem>
-          <ListItem button component="a" href="/settings">
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" sx={{ color: 'black' }} />
-          </ListItem>
-          <ListItem button onClick={handleLogout}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" sx={{ color: 'black' }} />
-          </ListItem>
-        </List>
-
-        <Divider />
-      </Drawer>
-
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           bgcolor: 'background.default',
-          p: 3,
-          minHeight: '100vh',
+          p: 0,
+          ml: { xs: 0, lg: 35 },
+           // xs: 0px'den büyük ekranlarda margin-left 0, lg: 1200px'den büyük ekranlarda margin-left 35
         }}
       >
         <ResponsiveAppBar />
-
-        <Toolbar />
+        <SwipeableTemporaryDrawer />
         <Typography variant="h4" gutterBottom sx={{ color: 'black' }}>
           Welcome to Your Dashboard
         </Typography>
