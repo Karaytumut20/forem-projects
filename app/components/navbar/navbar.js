@@ -204,8 +204,22 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
-                  <Typography textAlign="center" sx={{ color: '#000', fontSize: isExtraSmallScreen ? '14px' : isSmallScreen ? '15px' : '16px' }}>{setting}</Typography> {/* Black color */}
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    if (setting === 'Logout') {
+                      handleLogout();
+                    } else if (setting === 'Dashboard') {
+                      window.location.href = '/dashboard';
+                      handleCloseUserMenu();
+                    } else {
+                      handleCloseUserMenu();
+                    }
+                  }}
+                >
+                  <Typography textAlign="center" sx={{ color: '#000', fontSize: isExtraSmallScreen ? '14px' : isSmallScreen ? '15px' : '16px' }}>
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

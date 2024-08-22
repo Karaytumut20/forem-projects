@@ -60,6 +60,17 @@ const Dashboard = () => {
     fetchUserData();
   }, []);
 
+  const handleLogout = () => {
+    auth.signOut()
+      .then(() => {
+        setUserEmail('');
+        window.location.href = '/signin'; // Redirect to sign-in page after logout
+      })
+      .catch((error) => {
+        console.error('Error signing out: ', error);
+      });
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -80,31 +91,32 @@ const Dashboard = () => {
         <Toolbar />
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem button component="a" href="/">
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary="Dashboard" sx={{ color: 'black' }} />
+            <ListItemText primary="Home" sx={{ color: 'black' }} />
           </ListItem>
-          <ListItem button>
+          <ListItem button component="a" href="/dashboard">
             <ListItemIcon>
               <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="Account" sx={{ color: 'black' }} />
+            <ListItemText primary="Dashboard" sx={{ color: 'black' }} />
           </ListItem>
-          <ListItem button>
+          <ListItem button component="a" href="/settings">
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" sx={{ color: 'black' }} />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={handleLogout}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
             <ListItemText primary="Logout" sx={{ color: 'black' }} />
           </ListItem>
         </List>
+
         <Divider />
       </Drawer>
 
