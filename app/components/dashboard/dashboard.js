@@ -1,26 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Box, CssBaseline, Drawer, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
-import ResponsiveAppBar from '../navbar/navbar';
+import { Box, CssBaseline, Typography } from '@mui/material';
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import './dashboard.css';
+import ResponsiveAppBar from '../navbar/navbar';
 import SwipeableTemporaryDrawer from '../sidebar/sidebar';
+import './dashboard.css';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDLCmASch8Tet2R1MDnt9skETz6s2ZiIY8",
-  authDomain: "forem-c78dc.firebaseapp.com",
-  projectId: "forem-c78dc",
-  storageBucket: "forem-c78dc.appspot.com",
-  messagingSenderId: "62561986265",
-  appId: "1:62561986265:web:dd455856dba47ec90f00c8",
-  measurementId: "G-9G3GJCB5GR"
+  // Firebase Config Here
 };
 
 // Initialize Firebase
@@ -28,15 +17,11 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const drawerWidth = 200;
-
 const Dashboard = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [userSurname, setUserSurname] = useState('');
-  const [userData, setUserData] = useState([]);
-
-  const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,7 +29,7 @@ const Dashboard = () => {
         if (user) {
           setUserEmail(user.email);
           
-          const userCollectionRef = collection(db, 'userTable'); // Replace 'userTable' with your actual collection name
+          const userCollectionRef = collection(db, 'userTable');
           const querySnapshot = await getDocs(userCollectionRef);
           
           querySnapshot.forEach((doc) => {
@@ -52,10 +37,10 @@ const Dashboard = () => {
               const userData = doc.data();
               setUserName(userData.name || '');
               setUserSurname(userData.surname || '');
-              setUserData(userData);
             }
           });
         }
+        setLoading(false); // Stop loading when data is fetched
       });
     };
 
@@ -66,15 +51,19 @@ const Dashboard = () => {
     auth.signOut()
       .then(() => {
         setUserEmail('');
-        window.location.href = '/signin'; // Redirect to sign-in page after logout
+        window.location.href = '/signin';
       })
       .catch((error) => {
         console.error('Error signing out: ', error);
       });
   };
 
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', }}>
       <CssBaseline />
 
       <Box
@@ -84,7 +73,6 @@ const Dashboard = () => {
           bgcolor: 'background.default',
           p: 0,
           ml: { xs: 0, lg: 35 },
-           // xs: 0px'den büyük ekranlarda margin-left 0, lg: 1200px'den büyük ekranlarda margin-left 35
         }}
       >
         <ResponsiveAppBar />
@@ -105,6 +93,9 @@ const Dashboard = () => {
             borderRadius: 2,
             boxShadow: 3,
             mt: 4,
+              gap: 3,
+            maxWidth:450,
+            
           }}
         >
           <Typography variant="h6" sx={{ color: 'black' }}>User Information</Typography>
