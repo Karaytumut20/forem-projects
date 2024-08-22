@@ -10,34 +10,39 @@ import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SwipeableTemporaryDrawer() {
   const drawerWidth = 250; // Çekmece genişliği
 
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     left: false,
   });
 
-  const [isLargeScreen, setIsLargeScreen] = React.useState(window.innerWidth >= 1024);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      const isLarge = window.innerWidth >= 1024;
-      setIsLargeScreen(isLarge);
-      if (isLarge) {
-        setState({ left: true });
-      } else {
-        setState({ left: false });
-      }
-    };
+    // Tarayıcıda olup olmadığımızı kontrol edin
+    const isBrowser = typeof window !== 'undefined';
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); // initial check
+    if (isBrowser) {
+      const handleResize = () => {
+        const isLarge = window.innerWidth >= 1024;
+        setIsLargeScreen(isLarge);
+        if (isLarge) {
+          setState({ left: true });
+        } else {
+          setState({ left: false });
+        }
+      };
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+      window.addEventListener('resize', handleResize);
+      handleResize(); // initial check
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -120,7 +125,6 @@ export default function SwipeableTemporaryDrawer() {
         }}
       >
         <Button onClick={toggleDrawer('left', true)}>left</Button>
-    
       </Box>
     </Box>
   );
