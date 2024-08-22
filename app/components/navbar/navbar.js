@@ -23,7 +23,6 @@ const ResponsiveAppBar = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -54,11 +53,20 @@ const ResponsiveAppBar = () => {
   const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#ffff' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#ffff', boxShadow: 'none', borderBottom: '1px solid #ccc' }}>
       <Container maxWidth="xl">
-        <Toolbar sx={{ flexDirection: 'row', alignItems: 'center', py: 1 }}>
+        <Toolbar sx={{ flexDirection: isSmallScreen ? 'column' : 'row', alignItems: 'center', py: 1 }}>
+          
           {/* İlk Satır: Forem2go ve Sayfa Linkleri */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', mb: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              mb: isSmallScreen ? 1 : 0,
+            }}
+          >
             <Typography
               variant="h6"
               component="a"
@@ -69,18 +77,16 @@ const ResponsiveAppBar = () => {
                 letterSpacing: '.3rem',
                 color: '#000',
                 textDecoration: 'none',
-                fontSize: isSmallScreen ? '14px' : '16px',
-                textAlign: 'center',
-                mr: 2,
+                fontSize: '16px',
               }}
             >
               Forem2go
             </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
               {pages.map((page) => (
                 <Button
                   key={page}
-                  sx={{ color: '#000', mx: 1, fontSize: isSmallScreen ? '10px' : '12px', minWidth: '60px' }}
+                  sx={{ color: '#000', mx: 1, fontSize: '12px', minWidth: '60px' }}
                   onClick={() => handleMenuClose(setAnchorElUser)()}
                 >
                   {page}
@@ -89,8 +95,16 @@ const ResponsiveAppBar = () => {
             </Box>
           </Box>
 
-          {/* İkinci Satır: Avatar ve Butonlar */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          {/* İkinci Satır (Sadece küçük ekranlar için): Avatar ve Butonlar */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: isSmallScreen ? 'center' : 'flex-end',
+              alignItems: 'center',
+              width: '100%',
+              flexDirection: 'row',
+            }}
+          >
             <Button
               sx={{ color: '#000', background: '#ffd740', mx: 1, fontSize: '11px', minWidth: '100px' }}
               onClick={() => handleNavigate('/sign-in')}
@@ -105,13 +119,13 @@ const ResponsiveAppBar = () => {
             </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleMenuOpen(setAnchorElUser)} sx={{ p: 0, ml: 2 }}>
-                <Avatar sx={{ width: isExtraSmallScreen ? 24 : 32, height: isExtraSmallScreen ? 24 : 32 }}>
+                <Avatar sx={{ width: 32, height: 32 }}>
                   {emailInitial}
                 </Avatar>
               </IconButton>
             </Tooltip>
           </Box>
-
+          
           <Menu
             id="menu-appbar"
             anchorEl={anchorElUser}
