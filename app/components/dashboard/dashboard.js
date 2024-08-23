@@ -4,7 +4,6 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import ResponsiveAppBar from '../navbar/navbar';
-import SwipeableTemporaryDrawer from '../sidebar/sidebar';
 import './dashboard.css';
 
 // Firebase configuration
@@ -21,7 +20,8 @@ const Dashboard = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [userSurname, setUserSurname] = useState('');
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,7 +40,7 @@ const Dashboard = () => {
             }
           });
         }
-        setLoading(false); // Stop loading when data is fetched
+        setLoading(false);
       });
     };
 
@@ -63,7 +63,7 @@ const Dashboard = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
       <Box
@@ -75,8 +75,8 @@ const Dashboard = () => {
           ml: { xs: 0, lg: 35 },
         }}
       >
-        <ResponsiveAppBar />
-        <SwipeableTemporaryDrawer />
+        <ResponsiveAppBar toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)} />
+        
         <Typography variant="h4" gutterBottom sx={{ color: 'black' }}>
           Welcome to Your Dashboard
         </Typography>
@@ -93,9 +93,7 @@ const Dashboard = () => {
             borderRadius: 2,
             boxShadow: 3,
             mt: 4,
-              gap: 3,
-            maxWidth:450,
-            
+            maxWidth: 400,
           }}
         >
           <Typography variant="h6" sx={{ color: 'black' }}>User Information</Typography>
@@ -110,10 +108,11 @@ const Dashboard = () => {
 
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            display: 'flex', // Grid yerine flex yapısını kullanıyoruz.
+            flexDirection: 'row', // İçerikleri yan yana sıralamak için row yapısı
             gap: 3,
             mt: 4,
+            flexWrap: 'wrap', // Küçük ekranlarda satırdan taşmaması için wrap ekliyoruz.
           }}
         >
           <Box
@@ -122,6 +121,8 @@ const Dashboard = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: 3,
+              flex: '1 1 20%', // İçeriklerin eşit genişlikte olması için
+              minWidth: 200, // Minimum genişlik
             }}
           >
             <Typography variant="h6" sx={{ color: 'black' }}>Total Users</Typography>
@@ -135,6 +136,8 @@ const Dashboard = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: 3,
+              flex: '1 1 20%',
+              minWidth: 200,
             }}
           >
             <Typography variant="h6" sx={{ color: 'black' }}>Revenue</Typography>
@@ -148,6 +151,8 @@ const Dashboard = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: 3,
+              flex: '1 1 20%',
+              minWidth: 200,
             }}
           >
             <Typography variant="h6" sx={{ color: 'black' }}>New Signups</Typography>
@@ -161,6 +166,8 @@ const Dashboard = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: 3,
+              flex: '1 1 20%',
+              minWidth: 200,
             }}
           >
             <Typography variant="h6" sx={{ color: 'black' }}>Support Tickets</Typography>

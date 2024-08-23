@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -10,19 +10,18 @@ import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu'; // Hamburger ikonu için
 import { useEffect, useState } from 'react';
+
+const pages = ['Products', 'Pricing', 'Blog'];
 
 export default function SwipeableTemporaryDrawer() {
   const drawerWidth = 250; // Çekmece genişliği
 
-  const [state, setState] = useState({
-    left: false,
-  });
-
+  const [state, setState] = useState({ left: false });
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   useEffect(() => {
-    // Tarayıcıda olup olmadığımızı kontrol edin
     const isBrowser = typeof window !== 'undefined';
 
     if (isBrowser) {
@@ -46,14 +45,9 @@ export default function SwipeableTemporaryDrawer() {
   }, []);
 
   const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
+    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     if (!isLargeScreen) {
       setState({ ...state, [anchor]: open });
     }
@@ -77,6 +71,15 @@ export default function SwipeableTemporaryDrawer() {
           </ListItemIcon>
           <ListItemText primary="Home" sx={{ color: 'black' }} />
         </ListItem>
+
+        {isLargeScreen
+          ? null
+          : pages.map((page) => (
+              <ListItem button key={page} component="a" href={`/${page.toLowerCase()}`}>
+                <ListItemText primary={page} sx={{ color: 'black' }} />
+              </ListItem>
+            ))}
+
         <ListItem button component="a" href="/dashboard">
           <ListItemIcon>
             <PersonIcon />
@@ -124,7 +127,18 @@ export default function SwipeableTemporaryDrawer() {
           padding: 0,
         }}
       >
-        <Button onClick={toggleDrawer('left', true)}>left</Button>
+        {!isLargeScreen && (
+         <IconButton
+         edge="start"
+         color="inherit"
+         aria-label="menu"
+         onClick={toggleDrawer('left', true)}
+         sx={{ mr: 0, p: 0 }}  // Margin ve padding değerlerini sıfır yapıyoruz.
+       >
+         <MenuIcon sx={{ color: 'black' }} />
+       </IconButton>
+       
+        )}
       </Box>
     </Box>
   );
