@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'; // Use Next.js useRouter hook
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import IconButton from '@mui/material/IconButton';
@@ -10,16 +12,16 @@ import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu'; // Hamburger ikonu için
-import { useEffect, useState } from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 export default function SwipeableTemporaryDrawer() {
-  const drawerWidth = 250; // Çekmece genişliği
-
+  const drawerWidth = 250;
+  
   const [state, setState] = useState({ left: false });
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [currentPath, setCurrentPath] = useState(''); // Store current path
 
   useEffect(() => {
     const isBrowser = typeof window !== 'undefined';
@@ -36,13 +38,18 @@ export default function SwipeableTemporaryDrawer() {
       };
 
       window.addEventListener('resize', handleResize);
-      handleResize(); // initial check
+      handleResize();
 
       return () => {
         window.removeEventListener('resize', handleResize);
       };
     }
   }, []);
+
+  useEffect(() => {
+    const { pathname } = window.location; // Get the current path
+    setCurrentPath(pathname);
+  }, []); // This runs only on the client side
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -102,6 +109,11 @@ export default function SwipeableTemporaryDrawer() {
     </Box>
   );
 
+  // Check if the current path is /dashboard
+  if (currentPath !== '/dashboard') {
+    return null; // Don't render the drawer on other pages
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <SwipeableDrawer
@@ -133,11 +145,10 @@ export default function SwipeableTemporaryDrawer() {
          color="inherit"
          aria-label="menu"
          onClick={toggleDrawer('left', true)}
-         sx={{ mr: 0, p: 0 }}  // Margin ve padding değerlerini sıfır yapıyoruz.
+         sx={{ mr: 0, p: 0 }}
        >
          <MenuIcon sx={{ color: 'black' }} />
        </IconButton>
-       
         )}
       </Box>
     </Box>
