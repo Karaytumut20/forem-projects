@@ -28,7 +28,11 @@ const ResponsiveAppBar = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   
-  const isDashboardOpen = typeof window !== 'undefined' && window.location.pathname === '/dashboard';
+  const isDashboardOpen = typeof window !== 'undefined' && (
+    window.location.pathname === '/dashboard' ||
+    window.location.pathname.startsWith('/settings') ||
+    window.location.pathname.startsWith('/profile')
+  );
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {

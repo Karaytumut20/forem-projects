@@ -22,13 +22,13 @@ export default function SwipeableTemporaryDrawer() {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
 
+  const drawerPages = ['/dashboard', '/profile', '/settings'];
+
   useEffect(() => {
     const handleResize = () => {
       const isLarge = window.innerWidth >= 1024;
       setIsLargeScreen(isLarge);
-      if (isLarge && currentPath !== '/dashboard') {
-        setState({ left: false });
-      } else if (isLarge && currentPath === '/dashboard') {
+      if (isLarge && drawerPages.includes(currentPath)) {
         setState({ left: true });
       } else {
         setState({ left: false });
@@ -68,8 +68,7 @@ export default function SwipeableTemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {/* Dashboard sayfasında büyük ekranda Pages hariç diğer menüler görünecek */}
-        {currentPath === '/dashboard' && isLargeScreen && (
+        {drawerPages.includes(currentPath) && isLargeScreen && (
           <>
             <ListItem
               button
@@ -144,8 +143,7 @@ export default function SwipeableTemporaryDrawer() {
           </>
         )}
 
-        {/* Dashboard sayfasında küçük ekranda Pages dahil tüm menüler görünecek */}
-        {currentPath === '/dashboard' && !isLargeScreen && (
+        {drawerPages.includes(currentPath) && !isLargeScreen && (
           <>
             <ListItem
               button
@@ -236,8 +234,7 @@ export default function SwipeableTemporaryDrawer() {
           </>
         )}
 
-        {/* Diğer sayfalarda sadece Pages görünecek */}
-        {currentPath !== '/dashboard' && pages.map((page) => (
+        {currentPath !== '/dashboard' && currentPath !== '/profile' && currentPath !== '/settings' && pages.map((page) => (
           <ListItem
             button
             key={page}
@@ -258,8 +255,7 @@ export default function SwipeableTemporaryDrawer() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {/* Sidebar sadece Dashboard'da büyük ekranda gösterilir */}
-      {(!isLargeScreen || currentPath === '/dashboard') && (
+      {(!isLargeScreen || drawerPages.includes(currentPath)) && (
         <SwipeableDrawer
           anchor="left"
           open={state.left}
@@ -280,11 +276,10 @@ export default function SwipeableTemporaryDrawer() {
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: isLargeScreen && currentPath === '/dashboard' ? `${drawerWidth}px` : 0,
+          marginLeft: isLargeScreen && drawerPages.includes(currentPath) ? `${drawerWidth}px` : 0,
           padding: 0,
         }}
       >
-        {/* Hamburger ikonunu sadece küçük ekranda göster */}
         {!isLargeScreen && (
           <IconButton
             edge="start"
