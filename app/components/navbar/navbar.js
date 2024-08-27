@@ -102,24 +102,23 @@ const ResponsiveAppBar = () => {
               </Box>
             </SwipeableTemporaryDrawer>
             <Typography
-  variant="h6"
-  component="a"
-  href="/"
-  sx={{
-    mr: 1,
-    fontFamily: 'monospace',
-    color: '#000',
-    textDecoration: 'none',
-    fontSize: '16px',
-    marginLeft: {
-      xs: -3, // Küçük ekranlar için ml -3
-      lg: -35, // Büyük ekranlar için ml -35
-    }
-  }}
->
-  Forem2go
-</Typography>
-
+              variant="h6"
+              component="a"
+              href="/"
+              sx={{
+                mr: 1,
+                fontFamily: 'monospace',
+                color: '#000',
+                textDecoration: 'none',
+                fontSize: '16px',
+                marginLeft: {
+                  xs: -3, // Small screens
+                  lg: isDashboardOpen ? -35 : 0, // Large screens, apply -35 only on dashboard
+                },
+              }}
+            >
+              Forem2go
+            </Typography>
           </Box>
 
           {!isSmallScreen && (
