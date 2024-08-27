@@ -1,6 +1,6 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebase/config';
+"use client";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { auth } from '../../firebase/config';  // auth modülünü doğru bir şekilde import ettiğimizden emin olun
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,53 +16,62 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SwipeableTemporaryDrawer from '../sidebar/sidebar';
+import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth"; // Eklenen importlar
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || '');
-  const [loading, setLoading] = useState(!userEmail); // Eğer userEmail yoksa, loading true olarak başlar
+  const [userEmail, setUserEmail] = useState('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  
-  const isDashboardOpen = typeof window !== 'undefined' && (
-    window.location.pathname === '/dashboard' ||
-    window.location.pathname.startsWith('/settings') ||
-    window.location.pathname.startsWith('/profile')
-  );
+
+  const isDashboardOpen = useMemo(() => (
+    typeof window !== 'undefined' && (
+      window.location.pathname === '/dashboard' ||
+      window.location.pathname.startsWith('/settings') ||
+      window.location.pathname.startsWith('/profile')
+    )
+  ), []);
 
   useEffect(() => {
-    if (!userEmail) {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          setUserEmail(user.email);
-          localStorage.setItem('userEmail', user.email); // Kullanıcı e-postasını yerel depolamaya kaydet
-        } else {
-          setUserEmail('');
-          localStorage.removeItem('userEmail');
-        }
-        setLoading(false); // Kimlik doğrulama durumu belirlendikten sonra loading false olur
-      });
-      return unsubscribe;
-    } else {
-      setLoading(false); // Eğer userEmail zaten varsa loading false olur
+    if (typeof window !== 'undefined') {
+      const auth = getAuth(); // getAuth fonksiyonuyla auth objesini aldık
+      setPersistence(auth, browserLocalPersistence) // Doğru kullanım
+        .then(() => {
+          const storedEmail = localStorage.getItem('userEmail');
+          if (storedEmail) {
+            setUserEmail(storedEmail);
+          } else {
+            auth.onAuthStateChanged((user) => {
+              if (user) {
+                setUserEmail(user.email);
+                localStorage.setItem('userEmail', user.email);
+              } else {
+                setUserEmail('');
+                localStorage.removeItem('userEmail');
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('Persistence setting failed:', error);
+        });
     }
-  }, [userEmail]);
+  }, []);
 
-  const handleMenuOpen = (setAnchorEl) => (event) => setAnchorEl(event.currentTarget);
-  const handleMenuClose = (setAnchorEl) => () => setAnchorEl(null);
-
-  const handleNavigate = (url) => {
+  const handleMenuOpen = useCallback((setAnchorEl) => (event) => setAnchorEl(event.currentTarget), []);
+  const handleMenuClose = useCallback((setAnchorEl) => () => setAnchorEl(null), []);
+  const handleNavigate = useCallback((url) => {
     const destination = userEmail ? url : 'signin';
     window.location.href = destination;
-  };
+  }, [userEmail]);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     auth.signOut()
       .then(() => {
         setUserEmail('');
@@ -71,23 +80,18 @@ const ResponsiveAppBar = () => {
         window.location.href = '/signin';
       })
       .catch((error) => console.error('Error signing out: ', error));
-  };
+  }, [handleMenuClose]);
 
-  const handleDrawerToggle = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
+  const handleDrawerToggle = useCallback(() => {
+    setIsDrawerOpen((prev) => !prev);
+  }, []);
 
-  const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
-
-  if (loading) {
-    return null; // Sayfa yüklenirken hiçbir şey gösterme, loading tamamlanınca render edeceğiz
-  }
+  const emailInitial = useMemo(() => (userEmail ? userEmail.charAt(0).toUpperCase() : ''), [userEmail]);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none', borderBottom: '1px solid #ccc' }}>
       <Container maxWidth="xl">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             {isSmallScreen && (
               <IconButton
@@ -133,8 +137,8 @@ const ResponsiveAppBar = () => {
                 textDecoration: 'none',
                 fontSize: '16px',
                 marginLeft: {
-                  xs: -3, // Small screens
-                  lg: isDashboardOpen ? -35 : 0, // Large screens, apply -35 only on dashboard
+                  xs: -3, 
+                  lg: isDashboardOpen ? -35 : 0,
                 },
               }}
             >
@@ -147,7 +151,7 @@ const ResponsiveAppBar = () => {
               {pages.map((page) => (
                 <Button
                   key={page}
-                  sx={{ color: '#000', fontSize: '12px', minWidth: '60px', }}
+                  sx={{ color: '#000', fontSize: '12px', minWidth: '60px' }}
                   onClick={() => handleNavigate(page.toLowerCase())}
                 >
                   {page}
@@ -158,7 +162,7 @@ const ResponsiveAppBar = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button
-              sx={{ color: '#000', background: '#ffd740', fontSize: '11px', minWidth: '100px' ,}}
+              sx={{ color: '#000', background: '#ffd740', fontSize: '11px', minWidth: '100px' }}
               onClick={() => handleNavigate('/sign-in')}
             >
               Live demo
@@ -206,4 +210,4 @@ const ResponsiveAppBar = () => {
   );
 };
 
-export default ResponsiveAppBar;
+export default React.memo(ResponsiveAppBar);
