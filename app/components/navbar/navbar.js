@@ -21,14 +21,14 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || '');
-  const [loading, setLoading] = useState(!userEmail); // Eğer userEmail yoksa, loading true olarak başlar
+  const [userEmail, setUserEmail] = useState('');
+  const [loading, setLoading] = useState(true); 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
-  
+
   const isDashboardOpen = typeof window !== 'undefined' && (
     window.location.pathname === '/dashboard' ||
     window.location.pathname.startsWith('/settings') ||
@@ -36,22 +36,28 @@ const ResponsiveAppBar = () => {
   );
 
   useEffect(() => {
-    if (!userEmail) {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          setUserEmail(user.email);
-          localStorage.setItem('userEmail', user.email); // Kullanıcı e-postasını yerel depolamaya kaydet
-        } else {
-          setUserEmail('');
-          localStorage.removeItem('userEmail');
-        }
-        setLoading(false); // Kimlik doğrulama durumu belirlendikten sonra loading false olur
-      });
-      return unsubscribe;
+    if (typeof window !== 'undefined') {
+      const savedUserEmail = localStorage.getItem('userEmail');
+      if (savedUserEmail) {
+        setUserEmail(savedUserEmail);
+        setLoading(false);
+      } else {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+          if (user) {
+            setUserEmail(user.email);
+            localStorage.setItem('userEmail', user.email);
+          } else {
+            setUserEmail('');
+            localStorage.removeItem('userEmail');
+          }
+          setLoading(false);
+        });
+        return unsubscribe;
+      }
     } else {
-      setLoading(false); // Eğer userEmail zaten varsa loading false olur
+      setLoading(false);
     }
-  }, [userEmail]);
+  }, []);
 
   const handleMenuOpen = (setAnchorEl) => (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = (setAnchorEl) => () => setAnchorEl(null);
@@ -79,7 +85,7 @@ const ResponsiveAppBar = () => {
   const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
   if (loading) {
-    return null; // Sayfa yüklenirken hiçbir şey gösterme, loading tamamlanınca render edeceğiz
+    return null; 
   }
 
   return (
@@ -132,8 +138,8 @@ const ResponsiveAppBar = () => {
                 textDecoration: 'none',
                 fontSize: '16px',
                 marginLeft: {
-                  xs: -3, // Small screens
-                  lg: isDashboardOpen ? -35 : 0, // Large screens, apply -35 only on dashboard
+                  xs: -3, 
+                  lg: isDashboardOpen ? -35 : 0, 
                 },
               }}
             >
