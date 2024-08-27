@@ -150,7 +150,7 @@ const ResponsiveAppBar = () => {
             </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleMenuOpen(setAnchorElUser)} size="small">
-                <Avatar sx={{ width: 30, height: 30 }}>
+                <Avatar sx={{ width: 30, height: 30,mr:1 }}>
                   {emailInitial}
                 </Avatar>
               </IconButton>

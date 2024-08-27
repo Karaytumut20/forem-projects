@@ -77,7 +77,7 @@ const Dashboard = () => {
       >
         <ResponsiveAppBar toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)} />
         
-        <Typography variant="h4" gutterBottom sx={{ color: 'black' }}>
+        <Typography variant="h4" gutterBottom sx={{ color: 'black',mt:2 }}>
           Welcome to Your Dashboard
         </Typography>
         {userName && userSurname && (
