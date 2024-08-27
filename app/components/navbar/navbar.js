@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebase/config'; // Adjust the import path as needed
+import { auth } from '../../firebase/config';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,6 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu'; // Hamburger icon import
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SwipeableTemporaryDrawer from '../sidebar/sidebar';
@@ -25,6 +26,9 @@ const ResponsiveAppBar = () => {
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  
+  const isDashboardOpen = typeof window !== 'undefined' && window.location.pathname === '/dashboard';
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -59,28 +63,51 @@ const ResponsiveAppBar = () => {
   const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'blue', boxShadow: 'none', borderBottom: '1px solid #ccc' }}>
+    <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none', borderBottom: '1px solid #ccc' }}>
       <Container maxWidth="xl">
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',}}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           
-          <Box sx={{ display: 'flex', alignItems: 'center', }}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerToggle}
-            >
-            </IconButton>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            {isSmallScreen && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerToggle}
+                sx={{ marginRight: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
             <SwipeableTemporaryDrawer 
               open={isDrawerOpen} 
               onClose={handleDrawerToggle} 
               onOpen={handleDrawerToggle} 
-            />
+            >
+              <Box
+                sx={{ width: 250, padding: 2 }}
+                role="presentation"
+                onClick={handleDrawerToggle}
+                onKeyDown={handleDrawerToggle}
+              >
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    sx={{ width: '100%', textAlign: 'left' }}
+                    onClick={() => handleNavigate(page.toLowerCase())}
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </Box>
+            </SwipeableTemporaryDrawer>
             <Typography
               variant="h6"
               component="a"
               href="/"
-              sx={{mr:1,ml:1,
+              sx={{
+                mr: 1,
+                ml: isLargeScreen ? (isDashboardOpen ? -35 : 1) : 1,
                 fontFamily: 'monospace',
                 color: '#000',
                 textDecoration: 'none',

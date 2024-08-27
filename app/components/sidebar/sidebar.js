@@ -72,32 +72,69 @@ export default function SwipeableTemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem button component="a" href="/">
+        <ListItem 
+          button 
+          component="a" 
+          href="/" 
+          sx={{ 
+            backgroundColor: currentPath === '/' ? 'rgba(0, 0, 0, 0.08)' : 'transparent', 
+            color: currentPath === '/' ? 'blue' : 'black',
+            borderRadius: currentPath === '/' ? '10px' : '0',
+          }}
+        >
           <ListItemIcon>
-            <HomeIcon />
+            <HomeIcon sx={{ color: currentPath === '/' ? 'blue' : 'black' }} />
           </ListItemIcon>
-          <ListItemText primary="Home" sx={{ color: 'black' }} />
+          <ListItemText primary="Home" />
         </ListItem>
 
         {isLargeScreen
           ? null
           : pages.map((page) => (
-              <ListItem button key={page} component="a" href={`/${page.toLowerCase()}`}>
-                <ListItemText primary={page} sx={{ color: 'black' }} />
+              <ListItem 
+                button 
+                key={page} 
+                component="a" 
+                href={`/${page.toLowerCase()}`} 
+                sx={{ 
+                  backgroundColor: currentPath === `/${page.toLowerCase()}` ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+                  color: currentPath === `/${page.toLowerCase()}` ? 'blue' : 'black',
+                  borderRadius: currentPath === `/${page.toLowerCase()}` ? '10px' : '0',
+                }}
+              >
+                <ListItemText primary={page} />
               </ListItem>
             ))}
 
-        <ListItem button component="a" href="/dashboard">
+        <ListItem 
+          button 
+          component="a" 
+          href="/dashboard"
+          sx={{ 
+            backgroundColor: currentPath === '/dashboard' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+            color: currentPath === '/dashboard' ? 'blue' : 'black',
+            borderRadius: currentPath === '/dashboard' ? '10px' : '0',
+          }}
+        >
           <ListItemIcon>
-            <PersonIcon />
+            <PersonIcon sx={{ color: currentPath === '/dashboard' ? 'blue' : 'black' }} />
           </ListItemIcon>
-          <ListItemText primary="Dashboard" sx={{ color: 'black' }} />
+          <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button component="a" href="/settings">
+        <ListItem 
+          button 
+          component="a" 
+          href="/settings"
+          sx={{ 
+            backgroundColor: currentPath === '/settings' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+            color: currentPath === '/settings' ? 'blue' : 'black',
+            borderRadius: currentPath === '/settings' ? '10px' : '0',
+          }}
+        >
           <ListItemIcon>
-            <SettingsIcon />
+            <SettingsIcon sx={{ color: currentPath === '/settings' ? 'blue' : 'black' }} />
           </ListItemIcon>
-          <ListItemText primary="Settings" sx={{ color: 'black' }} />
+          <ListItemText primary="Settings" />
         </ListItem>
         <ListItem button onClick={handleLogout}>
           <ListItemIcon>
