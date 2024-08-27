@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu'; // Hamburger icon import
+import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SwipeableTemporaryDrawer from '../sidebar/sidebar';
@@ -21,7 +21,8 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || '');
+  const [loading, setLoading] = useState(!userEmail); // Eğer userEmail yoksa, loading true olarak başlar
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
@@ -35,12 +36,22 @@ const ResponsiveAppBar = () => {
   );
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) setUserEmail(user.email);
-      else setUserEmail('');
-    });
-    return unsubscribe;
-  }, []);
+    if (!userEmail) {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUserEmail(user.email);
+          localStorage.setItem('userEmail', user.email); // Kullanıcı e-postasını yerel depolamaya kaydet
+        } else {
+          setUserEmail('');
+          localStorage.removeItem('userEmail');
+        }
+        setLoading(false); // Kimlik doğrulama durumu belirlendikten sonra loading false olur
+      });
+      return unsubscribe;
+    } else {
+      setLoading(false); // Eğer userEmail zaten varsa loading false olur
+    }
+  }, [userEmail]);
 
   const handleMenuOpen = (setAnchorEl) => (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = (setAnchorEl) => () => setAnchorEl(null);
@@ -54,6 +65,7 @@ const ResponsiveAppBar = () => {
     auth.signOut()
       .then(() => {
         setUserEmail('');
+        localStorage.removeItem('userEmail');
         handleMenuClose(setAnchorElUser)();
         window.location.href = '/signin';
       })
@@ -65,6 +77,10 @@ const ResponsiveAppBar = () => {
   };
 
   const emailInitial = userEmail ? userEmail.charAt(0).toUpperCase() : '';
+
+  if (loading) {
+    return null; // Sayfa yüklenirken hiçbir şey gösterme, loading tamamlanınca render edeceğiz
+  }
 
   return (
     <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 'none', borderBottom: '1px solid #ccc' }}>
@@ -154,7 +170,7 @@ const ResponsiveAppBar = () => {
             </Button>
             <Tooltip title="Open settings">
               <IconButton onClick={handleMenuOpen(setAnchorElUser)} size="small">
-                <Avatar sx={{ width: 30, height: 30,mr:1 }}>
+                <Avatar sx={{ width: 30, height: 30, mr: 1 }}>
                   {emailInitial}
                 </Avatar>
               </IconButton>
