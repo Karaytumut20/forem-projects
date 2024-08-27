@@ -144,7 +144,7 @@ const ResponsiveAppBar = () => {
               Live demo
             </Button>
             <Button
-              sx={{ color: '#000', fontSize: '11px', minWidth: '100px', mx: 1 }}
+              sx={{ color: '#000', fontSize: '11px', minWidth: '100px' }}
               onClick={() => handleNavigate('initialize/domain-config')}
             >
               Get started now
