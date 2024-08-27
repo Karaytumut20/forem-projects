@@ -85,7 +85,7 @@ const ResponsiveAppBar = () => {
               onOpen={handleDrawerToggle} 
             >
               <Box
-                sx={{ width: 250, padding: 2 }}
+                sx={{ width: 250, padding: 0 }}
                 role="presentation"
                 onClick={handleDrawerToggle}
                 onKeyDown={handleDrawerToggle}
@@ -102,20 +102,24 @@ const ResponsiveAppBar = () => {
               </Box>
             </SwipeableTemporaryDrawer>
             <Typography
-              variant="h6"
-              component="a"
-              href="/"
-              sx={{
-                mr: 1,
-                ml: isLargeScreen ? (isDashboardOpen ? -35 : 1) : 1,
-                fontFamily: 'monospace',
-                color: '#000',
-                textDecoration: 'none',
-                fontSize: '16px',
-              }}
-            >
-              Forem2go
-            </Typography>
+  variant="h6"
+  component="a"
+  href="/"
+  sx={{
+    mr: 1,
+    fontFamily: 'monospace',
+    color: '#000',
+    textDecoration: 'none',
+    fontSize: '16px',
+    marginLeft: {
+      xs: -3, // Küçük ekranlar için ml -3
+      lg: -35, // Büyük ekranlar için ml -35
+    }
+  }}
+>
+  Forem2go
+</Typography>
+
           </Box>
 
           {!isSmallScreen && (
@@ -124,7 +128,7 @@ const ResponsiveAppBar = () => {
                 <Button
                   key={page}
                   sx={{ color: '#000', fontSize: '12px', minWidth: '60px', }}
-                  onClick={() => handleMenuClose(setAnchorElUser)()}
+                  onClick={() => handleNavigate(page.toLowerCase())}
                 >
                   {page}
                 </Button>
@@ -169,7 +173,7 @@ const ResponsiveAppBar = () => {
                 onClick={() => {
                   if (setting === 'Logout') handleLogout();
                   else if (setting === 'Dashboard') window.location.href = '/dashboard';
-                  handleMenuClose(setAnchorElUser)();
+                  else handleMenuClose(setAnchorElUser)();
                 }}
               >
                 <Typography sx={{ color: '#000', fontSize: '14px' }}>{setting}</Typography>

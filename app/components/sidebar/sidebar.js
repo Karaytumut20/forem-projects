@@ -74,15 +74,15 @@ export default function SwipeableTemporaryDrawer() {
             <ListItem
               button
               component="a"
-              href="/home"
+              href="/"
               sx={{
-                backgroundColor: currentPath === '/home' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
-                color: currentPath === '/home' ? 'blue' : 'black',
-                borderRadius: currentPath === '/home' ? '10px' : '0',
+                backgroundColor: currentPath === '/' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+                color: currentPath === '/' ? 'blue' : 'black',
+                borderRadius: currentPath === '/' ? '10px' : '0',
               }}
             >
               <ListItemIcon>
-                <HomeIcon sx={{ color: currentPath === '/home' ? 'blue' : 'black' }} />
+                <HomeIcon sx={{ color: currentPath === '/' ? 'blue' : 'black' }} />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
@@ -150,15 +150,15 @@ export default function SwipeableTemporaryDrawer() {
             <ListItem
               button
               component="a"
-              href="/home"
+              href="/"
               sx={{
-                backgroundColor: currentPath === '/home' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
-                color: currentPath === '/home' ? 'blue' : 'black',
-                borderRadius: currentPath === '/home' ? '10px' : '0',
+                backgroundColor: currentPath === '/' ? 'rgba(0, 0, 0, 0.08)' : 'transparent',
+                color: currentPath === '/' ? 'blue' : 'black',
+                borderRadius: currentPath === '/' ? '10px' : '0',
               }}
             >
               <ListItemIcon>
-                <HomeIcon sx={{ color: currentPath === '/home' ? 'blue' : 'black' }} />
+                <HomeIcon sx={{ color: currentPath === '/' ? 'blue' : 'black' }} />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
@@ -291,7 +291,7 @@ export default function SwipeableTemporaryDrawer() {
             color="inherit"
             aria-label="menu"
             onClick={toggleDrawer('left', true)}
-            sx={{ mr: 0, p: 0 }}
+            sx={{ ml: -7.7, p: 0 }}
           >
             <MenuIcon sx={{ color: 'black' }} />
           </IconButton>
