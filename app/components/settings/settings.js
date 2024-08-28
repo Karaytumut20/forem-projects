@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline, Typography, TextField, Button, Switch, FormControlLabel, Divider, Grid, Paper, MenuItem, Select, InputLabel, FormControl, Checkbox, List, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, updatePassword, sendPasswordResetEmail } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, updatePassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore, doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import ResponsiveAppBar from '../navbar/navbar';
 
@@ -30,39 +30,40 @@ const Settings = () => {
   const [loading, setLoading] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  useEffect(() => {
+// settings sayfasında
+useEffect(() => {
     const fetchUserData = async () => {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          setUserEmail(user.email);
-          
-          const userDocRef = doc(db, 'userTable', user.uid);
-          const userDoc = await getDoc(userDocRef);
-          
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setUserName(userData.name || '');
-            setUserSurname(userData.surname || '');
-            setNotificationEnabled(userData.notificationEnabled || false);
-            setSelectedLanguage(userData.language || 'en');
-            setBillingAddress(userData.billingAddress || '');
-            setSubscriptionPlan(userData.subscriptionPlan || 'free');
-            setApiKey(userData.apiKey || '');
-            setRoles(userData.roles || []);
+      try {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            setUserEmail(user.email);
+  
+            const userDocRef = doc(db, 'userTable', user.uid);
+            const userDoc = await getDoc(userDocRef);
+  
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              setUserName(userData.name || '');
+              setUserSurname(userData.surname || '');
+              setNotificationEnabled(userData.notificationEnabled || false);
+              setSelectedLanguage(userData.language || 'en');
+              setBillingAddress(userData.billingAddress || '');
+              setSubscriptionPlan(userData.subscriptionPlan || 'free');
+              setApiKey(userData.apiKey || '');
+              setRoles(userData.roles || []);
+            }
           }
-
-          // Fetch audit logs
-          const logsCollectionRef = collection(db, 'auditLogs');
-          const logsSnapshot = await getDocs(logsCollectionRef);
-          setAuditLogs(logsSnapshot.docs.map(doc => doc.data()));
-        }
+          setLoading(false);
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
         setLoading(false);
-      });
+      }
     };
-
+  
     fetchUserData();
   }, []);
-
+  
   const handlePasswordChange = async () => {
     try {
       const user = auth.currentUser;
@@ -164,7 +165,7 @@ const Settings = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        // Generate a new API key (this is just a mock example)
+        // Yeni bir API anahtarı oluşturma (bu bir örnek)
         const newApiKey = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         const userDocRef = doc(db, 'userTable', user.uid);
         await updateDoc(userDocRef, {
@@ -254,7 +255,6 @@ const Settings = () => {
                   <MenuItem value="tr">Turkish</MenuItem>
                   <MenuItem value="es">Spanish</MenuItem>
                   <MenuItem value="fr">French</MenuItem>
-                  {/* Add more languages as needed */}
                 </Select>
               </FormControl>
 
@@ -297,7 +297,6 @@ const Settings = () => {
                   <MenuItem value="free">Free</MenuItem>
                   <MenuItem value="basic">Basic</MenuItem>
                   <MenuItem value="premium">Premium</MenuItem>
-                  {/* Add more plans as needed */}
                 </Select>
               </FormControl>
             </Paper>
@@ -328,7 +327,6 @@ const Settings = () => {
                   </ListItem>
                 ))}
               </List>
-              {/* Add buttons or components for managing roles and permissions */}
               <Button variant="contained" color="primary" sx={{ mt: 2 }}>
                 Manage Roles
               </Button>

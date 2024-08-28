@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { auth } from '../../firebase/config';  // auth modülünü doğru bir şekilde import ettiğimizden emin olun
+import { auth } from '../../firebase/config';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,7 +16,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SwipeableTemporaryDrawer from '../sidebar/sidebar';
-import { getAuth, setPersistence, browserLocalPersistence } from "firebase/auth"; // Eklenen importlar
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -40,27 +39,20 @@ const ResponsiveAppBar = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const auth = getAuth(); // getAuth fonksiyonuyla auth objesini aldık
-      setPersistence(auth, browserLocalPersistence) // Doğru kullanım
-        .then(() => {
-          const storedEmail = localStorage.getItem('userEmail');
-          if (storedEmail) {
-            setUserEmail(storedEmail);
+      const storedEmail = localStorage.getItem('userEmail');
+      if (storedEmail) {
+        setUserEmail(storedEmail);
+      } else {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            setUserEmail(user.email);
+            localStorage.setItem('userEmail', user.email);
           } else {
-            auth.onAuthStateChanged((user) => {
-              if (user) {
-                setUserEmail(user.email);
-                localStorage.setItem('userEmail', user.email);
-              } else {
-                setUserEmail('');
-                localStorage.removeItem('userEmail');
-              }
-            });
+            setUserEmail('');
+            localStorage.removeItem('userEmail');
           }
-        })
-        .catch((error) => {
-          console.error('Persistence setting failed:', error);
         });
+      }
     }
   }, []);
 
@@ -142,7 +134,7 @@ const ResponsiveAppBar = () => {
                 },
               }}
             >
-              Forem2go
+              Forem2goss
             </Typography>
           </Box>
 

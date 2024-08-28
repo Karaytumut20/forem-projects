@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, CssBaseline, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, IconButton, Grid, TextField, Divider } from '@mui/material';
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import ResponsiveAppBar from '../navbar/navbar';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,25 +29,29 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          setUserEmail(user.email);
-          
-          const userCollectionRef = collection(db, 'userTable');
-          const querySnapshot = await getDocs(userCollectionRef);
-          
-          querySnapshot.forEach((doc) => {
-            if (doc.data().email === user.email) {
-              const userData = doc.data();
-              setUserName(userData.name || '');
-              setUserSurname(userData.surname || '');
-              setDomains(userData.freeDomains || []);
-              setOwnedDomains(userData.ownedDomains || []);
-            }
-          });
-        }
-        setLoading(false);
-      });
+      if (typeof window !== 'undefined') {
+        // Firebase'de oturum bilgilerini tarayıcıda saklama
+        await setPersistence(auth, browserLocalPersistence);
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            setUserEmail(user.email);
+            
+            const userCollectionRef = collection(db, 'userTable');
+            const querySnapshot = await getDocs(userCollectionRef);
+            
+            querySnapshot.forEach((doc) => {
+              if (doc.data().email === user.email) {
+                const userData = doc.data();
+                setUserName(userData.name || '');
+                setUserSurname(userData.surname || '');
+                setDomains(userData.freeDomains || []);
+                setOwnedDomains(userData.ownedDomains || []);
+              }
+            });
+          }
+          setLoading(false);
+        });
+      }
     };
 
     fetchUserData();
