@@ -32,7 +32,7 @@ export default function Home() {
         setUserSession(user);
       } else if (!storedUser) {
         // Oturum açmamışsa, yönlendirme yapın
-        router.push('/sign-in');
+        router.push('/signin');
       } else {
         // Oturum açık ise localStorage'dan kullanıcı bilgilerini al
         setUserSession(JSON.parse(storedUser));
@@ -44,7 +44,7 @@ export default function Home() {
     signOut(auth)
       .then(() => {
         localStorage.removeItem('user');
-        router.push('/sign-in');
+        router.push('/signin');
       })
       .catch((error) => console.error('Error signing out: ', error));
   };
