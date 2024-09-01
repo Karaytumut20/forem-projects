@@ -11,7 +11,7 @@ import ResponsiveAppBarHome from './components/navbar-home/navbar-home';
 import InfoWithButton from './components/ctn/ctn';
 import CardComp from './components/card/card';
 import CardGrid from './components/cardGrid/cardGrid';
-import CardComponent from './components/carcComponent/cardComponenet'; // Bileşen adını düzelttim
+import CardCopmonent from './components/carcComponent/cardComponenet';
 import TextWithImageComponent from './components/TextWithImageComponent/TextWithImageComponent';
 import FooterCard from './components/footer/footer';
 import CubeCard from './components/cubeCard/cubeCard';
@@ -163,7 +163,7 @@ export default function Home() {
           Simple and easy setup
         </Typography>
       </Box>
-      <CardComponent /> {/* Bileşen adını düzelttim */}
+      <CardCopmonent />
       <CubeCard />
       <TextWithImageComponent />
       <FooterCard />
