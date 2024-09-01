@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Box, Typography, Grid } from '@mui/material';
 import Image from 'next/image';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -7,15 +7,14 @@ import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import './page.css'; // CSS dosyasını import et
-import ResponsiveAppBar from './components/navbar/navbar';
+import ResponsiveAppBarHome from './components/navbar-home/navbar-home';
 import InfoWithButton from './components/ctn/ctn';
 import CardComp from './components/card/card';
 import CardGrid from './components/cardGrid/cardGrid';
-import CardCopmonent from './components/carcComponent/cardComponenet';
+import CardComponent from './components/carcComponent/cardComponenet'; // Bileşen adını düzelttim
 import TextWithImageComponent from './components/TextWithImageComponent/TextWithImageComponent';
 import FooterCard from './components/footer/footer';
 import CubeCard from './components/cubeCard/cubeCard';
-
 
 export default function Home() {
   const [user] = useAuthState(auth);
@@ -25,27 +24,36 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Tarayıcıda çalıştığımızı kontrol ediyoruz
-      const session = sessionStorage.getItem('user');
-      setUserSession(session);
-    }
-  }, []);
+      const storedUser = localStorage.getItem('user');
 
-  // useEffect(() => {
-  // if (!user && !userSession) {
-  // router.push('/sign-in');
-  //}
-  //}, [user, userSession, router]);
+      if (user) {
+        // Kullanıcı giriş yaptıysa, localStorage'a kaydedin
+        localStorage.setItem('user', JSON.stringify(user));
+        setUserSession(user);
+      } else if (!storedUser) {
+        // Oturum açmamışsa, yönlendirme yapın
+        router.push('/sign-in');
+      } else {
+        // Oturum açık ise localStorage'dan kullanıcı bilgilerini al
+        setUserSession(JSON.parse(storedUser));
+      }
+    }
+  }, [user, router]);
 
   const handleSignOut = () => {
-    signOut(auth);
-    sessionStorage.removeItem('user');
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem('user');
+        router.push('/sign-in');
+      })
+      .catch((error) => console.error('Error signing out: ', error));
   };
 
   return (
     <main>
-      <ResponsiveAppBar />
+      <ResponsiveAppBarHome />
       <Box className="relative w-full h-96">
-      <Image
+        <Image
           src="/img1.png" // Resmin public klasöründeki yolu
           alt="Description of image"
           fill // 'layout' prop yerine 'fill' kullanıyoruz
@@ -155,11 +163,10 @@ export default function Home() {
           Simple and easy setup
         </Typography>
       </Box>
-      <CardCopmonent />
-      <CubeCard/>
+      <CardComponent /> {/* Bileşen adını düzelttim */}
+      <CubeCard />
       <TextWithImageComponent />
       <FooterCard />
-      
     </main>
   );
 }

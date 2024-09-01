@@ -1,0 +1,13 @@
+
+  
+  .content {
+    margin-left: 0; /* Varsayılan margin */
+    transition: margin-left 0.3s ease;
+  }
+  
+  @media (min-width: 1024px) {
+    .content {
+      margin-left: 250px; /* Büyük ekranlar için margin */
+    }
+  }
+  

@@ -1,91 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, CssBaseline, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, IconButton, Grid, TextField, Divider } from '@mui/material';
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import ResponsiveAppBar from '../navbar/navbar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EditIcon from '@mui/icons-material/Edit';
-
-// Firebase configuration
-const firebaseConfig = {
-  // Firebase Config Here
-};
-
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 const Profile = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [userSurname, setUserSurname] = useState('');
-  const [loading, setLoading] = useState(true);
   const [domains, setDomains] = useState([]);
   const [ownedDomains, setOwnedDomains] = useState([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (typeof window !== 'undefined') {
-        // Firebase'de oturum bilgilerini tarayıcıda saklama
-        await setPersistence(auth, browserLocalPersistence);
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            setUserEmail(user.email);
-            
-            const userCollectionRef = collection(db, 'userTable');
-            const querySnapshot = await getDocs(userCollectionRef);
-            
-            querySnapshot.forEach((doc) => {
-              if (doc.data().email === user.email) {
-                const userData = doc.data();
-                setUserName(userData.name || '');
-                setUserSurname(userData.surname || '');
-                setDomains(userData.freeDomains || []);
-                setOwnedDomains(userData.ownedDomains || []);
-              }
-            });
-          }
-          setLoading(false);
-        });
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const handleAddDomain = () => {
-    // Logic to add a new domain
+    // Yeni domain ekleme işlemi
     alert('Add Domain functionality');
   };
 
   const handleEditDomain = (domain) => {
-    // Logic to edit a domain
+    // Domain düzenleme işlemi
     alert(`Edit Domain: ${domain}`);
   };
 
   const handleDeleteDomain = (domain) => {
-    // Logic to delete a domain
+    // Domain silme işlemi
     alert(`Delete Domain: ${domain}`);
   };
 
   const handleLogout = () => {
-    auth.signOut()
-      .then(() => {
-        setUserEmail('');
-        window.location.href = '/signin';
-      })
-      .catch((error) => {
-        console.error('Error signing out: ', error);
-      });
+    // Çıkış işlemi
+    setUserEmail('');
+    window.location.href = '/signin';
   };
-
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -97,10 +42,9 @@ const Profile = () => {
           flexGrow: 1,
           bgcolor: 'background.default',
           p: 0,
-          ml: { xs: 0, lg: 35 },
+          ml: { xs: 0, lg: 4 },
         }}
       >
-        <ResponsiveAppBar toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)} />
 
         <Typography variant="h4" gutterBottom sx={{ color: 'black', mt: 2 }}>
           Profile

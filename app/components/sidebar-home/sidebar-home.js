@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import IconButton from '@mui/material/IconButton';
@@ -16,12 +16,20 @@ import { usePathname } from 'next/navigation';
 import useTheme from '@mui/material/styles/useTheme';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-export default function SwipeablePermanentDrawer() {
+export default function SwipeablePermanentDrawerHome() {
   const [drawerWidth] = useState(250);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  // Effect to ensure drawer is closed initially on mobile
+  useEffect(() => {
+    if (isSmallScreen) {
+      setOpen(false);
+    }
+  }, [isSmallScreen]);
 
   // Toggle drawer state
   const toggleDrawer = (isOpen) => (event) => {
@@ -42,8 +50,8 @@ export default function SwipeablePermanentDrawer() {
     <Box
       sx={{ width: drawerWidth }}
       role="presentation"
-      onClick={isMobile ? toggleDrawer(false) : undefined} // Sadece mobilde kapatmak için
-      onKeyDown={isMobile ? toggleDrawer(false) : undefined} // Sadece mobilde kapatmak için
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
     >
       <List>
         <ListItem
@@ -104,34 +112,19 @@ export default function SwipeablePermanentDrawer() {
     </Box>
   );
 
+  // Return component with conditional rendering
   return (
     <Box sx={{ display: 'flex' }}>
-      {!isMobile && (
-        <SwipeableDrawer
-          anchor="left"
-          open={true}
-          variant="permanent" // Büyük ekranlarda sürekli açık
-          sx={{
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-            },
-          }}
-        >
-          {list()}
-        </SwipeableDrawer>
-      )}
-
-      {isMobile && (
+      {isSmallScreen && (
         <>
-          <IconButton onClick={toggleDrawer(true)}>
+          <IconButton onClick={toggleDrawer(true)} >
             <MenuIcon sx={{ marginLeft: -15 }} />
           </IconButton>
           <SwipeableDrawer
             anchor="left"
             open={open}
-            onClose={toggleDrawer(false)} // Drawer'ı kapatmak için
-            onOpen={toggleDrawer(true)}  // Drawer'ı açmak için
-            variant="temporary" // Mobilde geçici olarak açılır/kapanır
+            onClose={toggleDrawer(false)}
+            onOpen={toggleDrawer(true)}
             sx={{
               '& .MuiDrawer-paper': {
                 width: drawerWidth,
@@ -147,7 +140,7 @@ export default function SwipeablePermanentDrawer() {
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: isMobile ? 0 : `${drawerWidth}px`,
+          marginLeft: isSmallScreen ? 0 : `${drawerWidth}px`,
           padding: 0,
         }}
       />

@@ -1,61 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Box, CssBaseline, Typography } from '@mui/material';
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import ResponsiveAppBar from '../navbar/navbar';
-import './dashboard.css';
-
-// Firebase configuration
-const firebaseConfig = {
-  // Firebase Config Here
-};
-
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
+import React, { useState } from 'react';
+import { Box, CssBaseline, Typography, Button } from '@mui/material';
 
 const Dashboard = () => {
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [userSurname, setUserSurname] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          setUserEmail(user.email);
-          
-          const userCollectionRef = collection(db, 'userTable');
-          const querySnapshot = await getDocs(userCollectionRef);
-          
-          querySnapshot.forEach((doc) => {
-            if (doc.data().email === user.email) {
-              const userData = doc.data();
-              setUserName(userData.name || '');
-              setUserSurname(userData.surname || '');
-            }
-          });
-        }
-        setLoading(false);
-      });
-    };
-
-    fetchUserData();
-  }, []);
+  const [loading, setLoading] = useState(false); // Veri çekme işlemi olmadığından başlangıçta false
 
   const handleLogout = () => {
-    auth.signOut()
-      .then(() => {
-        setUserEmail('');
-        window.location.href = '/signin';
-      })
-      .catch((error) => {
-        console.error('Error signing out: ', error);
-      });
+    // Çıkış işlemi simülasyonu
+    setUserEmail('');
+    window.location.href = '/signin';
   };
 
   if (loading) {
@@ -71,13 +26,10 @@ const Dashboard = () => {
         sx={{
           flexGrow: 1,
           bgcolor: 'background.default',
-          p: 0,
-          ml: { xs: 0, lg: 35 },
+          p: 3,
         }}
       >
-        <ResponsiveAppBar toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)} />
-        
-        <Typography variant="h4" gutterBottom sx={{ color: 'black',mt:2 }}>
+        <Typography variant="h4" gutterBottom sx={{ color: 'black', mt: 2 }}>
           Welcome to Your Dashboard
         </Typography>
         {userName && userSurname && (
@@ -102,78 +54,10 @@ const Dashboard = () => {
           <Typography variant="body1" sx={{ color: 'black' }}><strong>Email:</strong> {userEmail}</Typography>
         </Box>
 
-        <Typography variant="body1" sx={{ mt: 4, color: 'black' }}>
-          This is your main dashboard where you can manage your Forem services, view statistics, and update your account information. Use the side menu to navigate through different sections.
-        </Typography>
-
-        <Box
-          sx={{
-            display: 'flex', // Grid yerine flex yapısını kullanıyoruz.
-            flexDirection: 'row', // İçerikleri yan yana sıralamak için row yapısı
-            gap: 3,
-            mt: 4,
-            flexWrap: 'wrap', // Küçük ekranlarda satırdan taşmaması için wrap ekliyoruz.
-          }}
-        >
-          <Box
-            sx={{
-              bgcolor: '#fff',
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              flex: '1 1 20%', // İçeriklerin eşit genişlikte olması için
-              minWidth: 200, // Minimum genişlik
-            }}
-          >
-            <Typography variant="h6" sx={{ color: 'black' }}>Total Users</Typography>
-            <Typography variant="h4" sx={{ color: 'black' }}>1,234</Typography>
-            <Typography variant="body2" color="textSecondary">Active Users in your Community</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              bgcolor: '#fff',
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              flex: '1 1 20%',
-              minWidth: 200,
-            }}
-          >
-            <Typography variant="h6" sx={{ color: 'black' }}>Revenue</Typography>
-            <Typography variant="h4" sx={{ color: 'black' }}>$12,345</Typography>
-            <Typography variant="body2" color="textSecondary">Monthly Revenue from Subscriptions</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              bgcolor: '#fff',
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              flex: '1 1 20%',
-              minWidth: 200,
-            }}
-          >
-            <Typography variant="h6" sx={{ color: 'black' }}>New Signups</Typography>
-            <Typography variant="h4" sx={{ color: 'black' }}>56</Typography>
-            <Typography variant="body2" color="textSecondary">New Users This Month</Typography>
-          </Box>
-
-          <Box
-            sx={{
-              bgcolor: '#fff',
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              flex: '1 1 20%',
-              minWidth: 200,
-            }}
-          >
-            <Typography variant="h6" sx={{ color: 'black' }}>Support Tickets</Typography>
-            <Typography variant="h4" sx={{ color: 'black' }}>12</Typography>
-            <Typography variant="body2" color="textSecondary">Pending Support Tickets</Typography>
-          </Box>
+        <Box sx={{ mt: 4 }}>
+          <Button variant="contained" color="secondary" onClick={handleLogout}>
+            Logout
+          </Button>
         </Box>
       </Box>
     </Box>

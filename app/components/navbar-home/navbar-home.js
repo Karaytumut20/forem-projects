@@ -15,12 +15,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import SwipeablePermanentDrawer from '../sidebar/sidebar';
+import SwipeablePermanentDrawerHome from '../sidebar-home/sidebar-home';
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBarHome = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userEmail, setUserEmail] = useState('');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Ensure initial state is false
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -38,13 +38,6 @@ const ResponsiveAppBar = () => {
 
     return () => unsubscribe();
   }, []);
-
-  useEffect(() => {
-    // Close drawer when the screen size changes to small screen
-    if (isSmallScreen) {
-      setIsDrawerOpen(false);
-    }
-  }, [isSmallScreen]);
 
   const handleMenuOpen = useCallback((event) => {
     setAnchorElUser(event.currentTarget);
@@ -82,45 +75,47 @@ const ResponsiveAppBar = () => {
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             {isSmallScreen && (
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerToggle}
-                sx={{ marginRight: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
+              <>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerToggle}
+                  sx={{ marginRight: 2 }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <SwipeablePermanentDrawerHome 
+                  onOpen={handleDrawerToggle}
+                  onClose={handleDrawerToggle}
+                  open={isDrawerOpen}
+                >
+                  <Box
+                    sx={{ width: 250, padding: 0 }}
+                    role="presentation"
+                    onClick={handleDrawerToggle}
+                    onKeyDown={handleDrawerToggle}
+                  >
+                    {/* Drawer içerik kısmı */}
+                  </Box>
+                </SwipeablePermanentDrawerHome>
+              </>
             )}
-            <SwipeablePermanentDrawer 
-              onOpen={handleDrawerToggle}
-              onClose={handleDrawerToggle}
-              open={isDrawerOpen}
-            >
-              <Box
-                sx={{ width: 250, padding: 0 }}
-                role="presentation"
-                onClick={handleDrawerToggle}
-                onKeyDown={handleDrawerToggle}
-              >
-                {/* Drawer içerik kısmı */}
-              </Box>
-            </SwipeablePermanentDrawer>
             <Typography
-              variant="h6"
-              component="a"
-              href="/"
-              sx={{
-                mr: 1,
-                fontFamily: 'monospace',
-                color: '#000',
-                textDecoration: 'none',
-                fontSize: '16px',
-                marginLeft: isSmallScreen ? -5 : -2,
-              }}
-            >
-              Forem2go
-            </Typography>
+      variant="h6"
+      component="a"
+      href="/"
+      sx={{
+        mr: 1,
+        fontFamily: 'monospace',
+        color: '#000',
+        textDecoration: 'none',
+        fontSize: '16px',
+        marginLeft: isSmallScreen ? -5 : -2, // Ekran boyutuna göre marginLeft ayarı
+      }}
+    >
+      Forem2go
+    </Typography>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -158,4 +153,4 @@ const ResponsiveAppBar = () => {
   );
 };
 
-export default React.memo(ResponsiveAppBar);
+export default React.memo(ResponsiveAppBarHome);
