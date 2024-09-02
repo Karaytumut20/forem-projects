@@ -1,5 +1,5 @@
-"use client";
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import IconButton from '@mui/material/IconButton';
@@ -12,45 +12,61 @@ import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
-import { usePathname } from 'next/navigation';
-import useTheme from '@mui/material/styles/useTheme';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { usePathname } from 'next/navigation'; // Use usePathname
 
-export default function SwipeablePermanentDrawer() {
-  const [drawerWidth] = useState(250);
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+export default function SwipeableTemporaryDrawer() {
+  const [drawerWidth, setDrawerWidth] = useState(250);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false); // Initialize with a default value
 
-  // Toggle drawer state
-  const toggleDrawer = (isOpen) => (event) => {
+  const pathname = usePathname(); // Get the current pathname
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isLarge = window.innerWidth >= 1024;
+      setIsLargeScreen(isLarge);
+      setDrawerWidth(isLarge ? 250 : 200);
+      setDrawerOpen(isLarge);
+    };
+
+    // Check on component mount
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
+
+  const toggleDrawer = useCallback((open) => (event) => {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    setOpen(isOpen);
-  };
+    setDrawerOpen(open);
+  }, []);
 
-  // Handle user logout action
   const handleLogout = () => {
     console.log('User logged out');
-    // Handle logout logic here
+    // Implement your logout functionality here
   };
 
-  // Drawer list content
-  const list = () => (
+  const list = (anchor) => (
     <Box
-      sx={{ width: drawerWidth }}
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : drawerWidth }}
       role="presentation"
-      onClick={isMobile ? toggleDrawer(false) : undefined} // Sadece mobilde kapatmak için
-      onKeyDown={isMobile ? toggleDrawer(false) : undefined} // Sadece mobilde kapatmak için
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
     >
       <List>
         <ListItem
           button
           component="a"
           href="/"
-          sx={{ backgroundColor: pathname === '/' ? '#f0f0f0' : 'transparent' }}
+          sx={{ backgroundColor: pathname === '/' ? '#f0f0f0' : 'transparent' }} // Active state styling
         >
           <ListItemIcon>
             <HomeIcon />
@@ -62,7 +78,7 @@ export default function SwipeablePermanentDrawer() {
           button
           component="a"
           href="/dashboard"
-          sx={{ backgroundColor: pathname === '/dashboard' ? '#f0f0f0' : 'transparent' }}
+          sx={{ backgroundColor: pathname === '/dashboard' ? '#f0f0f0' : 'transparent' }} // Active state styling
         >
           <ListItemIcon>
             <PersonIcon />
@@ -74,7 +90,7 @@ export default function SwipeablePermanentDrawer() {
           button
           component="a"
           href="/profile"
-          sx={{ backgroundColor: pathname === '/profile' ? '#f0f0f0' : 'transparent' }}
+          sx={{ backgroundColor: pathname === '/profile' ? '#f0f0f0' : 'transparent' }} // Active state styling
         >
           <ListItemIcon>
             <PersonIcon />
@@ -86,7 +102,7 @@ export default function SwipeablePermanentDrawer() {
           button
           component="a"
           href="/settings"
-          sx={{ backgroundColor: pathname === '/settings' ? '#f0f0f0' : 'transparent' }}
+          sx={{ backgroundColor: pathname === '/settings' ? '#f0f0f0' : 'transparent' }} // Active state styling
         >
           <ListItemIcon>
             <SettingsIcon />
@@ -106,51 +122,41 @@ export default function SwipeablePermanentDrawer() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      {!isMobile && (
-        <SwipeableDrawer
-          anchor="left"
-          open={true}
-          variant="permanent" // Büyük ekranlarda sürekli açık
-          sx={{
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-            },
-          }}
-        >
-          {list()}
-        </SwipeableDrawer>
-      )}
-
-      {isMobile && (
-        <>
-          <IconButton onClick={toggleDrawer(true)}>
-            <MenuIcon sx={{ marginLeft: -15 }} />
-          </IconButton>
-          <SwipeableDrawer
-            anchor="left"
-            open={open}
-            onClose={toggleDrawer(false)} // Drawer'ı kapatmak için
-            onOpen={toggleDrawer(true)}  // Drawer'ı açmak için
-            variant="temporary" // Mobilde geçici olarak açılır/kapanır
-            sx={{
-              '& .MuiDrawer-paper': {
-                width: drawerWidth,
-              },
-            }}
-          >
-            {list()}
-          </SwipeableDrawer>
-        </>
-      )}
+      <SwipeableDrawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={isLargeScreen ? undefined : toggleDrawer(false)}
+        onOpen={isLargeScreen ? undefined : toggleDrawer(true)}
+        variant={isLargeScreen ? 'persistent' : 'temporary'}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+          },
+        }}
+      >
+        {list('left')}
+      </SwipeableDrawer>
 
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          marginLeft: isMobile ? 0 : `${drawerWidth}px`,
+          marginLeft: isLargeScreen ? `${drawerWidth}px` : 0,
           padding: 0,
         }}
-      />
+      >
+        {!isLargeScreen && (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleDrawer(true)}
+            sx={{ ml: -7.7, p: 0 }}
+          >
+            <MenuIcon sx={{ color: 'black' }} />
+          </IconButton>
+        )}
+      </Box>
     </Box>
   );
 }

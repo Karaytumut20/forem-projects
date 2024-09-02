@@ -11,21 +11,20 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import SwipeablePermanentDrawer from '../sidebar/sidebar';
+import SwipeableTemporaryDrawer from '../sidebar/sidebar';
 
 const ResponsiveAppBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userEmail, setUserEmail] = useState('');
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Ensure initial state is false
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
+    // Check authentication status on mount
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUserEmail(user.email || '');
@@ -36,24 +35,11 @@ const ResponsiveAppBar = () => {
       }
     });
 
-    return () => unsubscribe();
-  }, []);
+    return () => unsubscribe(); // Clean up subscription on unmount
+  }, []); // Empty dependency array ensures this effect runs only on mount and unmount
 
-  useEffect(() => {
-    // Close drawer when the screen size changes to small screen
-    if (isSmallScreen) {
-      setIsDrawerOpen(false);
-    }
-  }, [isSmallScreen]);
-
-  const handleMenuOpen = useCallback((event) => {
-    setAnchorElUser(event.currentTarget);
-  }, []);
-  
-  const handleMenuClose = useCallback(() => {
-    setAnchorElUser(null);
-  }, []);
-
+  const handleMenuOpen = useCallback((setAnchorEl) => (event) => setAnchorEl(event.currentTarget), []);
+  const handleMenuClose = useCallback((setAnchorEl) => () => setAnchorEl(null), []);
   const handleNavigate = useCallback((url) => {
     const destination = userEmail ? url : '/signin';
     window.location.href = destination;
@@ -64,7 +50,7 @@ const ResponsiveAppBar = () => {
       .then(() => {
         setUserEmail('');
         localStorage.removeItem('userEmail');
-        handleMenuClose();
+        handleMenuClose(setAnchorElUser)();
         window.location.href = '/signin';
       })
       .catch((error) => console.error('Error signing out: ', error));
@@ -92,10 +78,10 @@ const ResponsiveAppBar = () => {
                 <MenuIcon />
               </IconButton>
             )}
-            <SwipeablePermanentDrawer 
-              onOpen={handleDrawerToggle}
-              onClose={handleDrawerToggle}
-              open={isDrawerOpen}
+            <SwipeableTemporaryDrawer 
+              open={isDrawerOpen} 
+              onClose={handleDrawerToggle} 
+              onOpen={handleDrawerToggle} 
             >
               <Box
                 sx={{ width: 250, padding: 0 }}
@@ -105,7 +91,7 @@ const ResponsiveAppBar = () => {
               >
                 {/* Drawer içerik kısmı */}
               </Box>
-            </SwipeablePermanentDrawer>
+            </SwipeableTemporaryDrawer>
             <Typography
               variant="h6"
               component="a"
@@ -116,7 +102,7 @@ const ResponsiveAppBar = () => {
                 color: '#000',
                 textDecoration: 'none',
                 fontSize: '16px',
-                marginLeft: isSmallScreen ? -5 : -2,
+                marginLeft: -3,
               }}
             >
               Forem2go
@@ -126,7 +112,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button
               sx={{ color: '#000', background: '#ffd740', fontSize: '11px', minWidth: '100px' }}
-              onClick={() => handleNavigate('/signin')}
+              onClick={() => handleNavigate('/sign-in')}
             >
               Live demo
             </Button>
@@ -137,20 +123,12 @@ const ResponsiveAppBar = () => {
               Get started now
             </Button>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleMenuOpen} size="small">
+              <IconButton onClick={handleMenuOpen(setAnchorElUser)} size="small">
                 <Avatar sx={{ width: 30, height: 30, mr: 1 }}>
                   {emailInitial}
                 </Avatar>
               </IconButton>
             </Tooltip>
-            <Menu
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={() => handleNavigate('/profile')}>Profile</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
