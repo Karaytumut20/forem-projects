@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import Image from 'next/image';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './firebase/config';
@@ -23,42 +23,48 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Tarayıcıda çalıştığımızı kontrol ediyoruz
       const storedUser = localStorage.getItem('user');
 
       if (user) {
-        // Kullanıcı giriş yaptıysa, localStorage'a kaydedin
+        // Kullanıcı giriş yaptıysa, localStorage'a kaydedin ve state'i güncelleyin
         localStorage.setItem('user', JSON.stringify(user));
         setUserSession(user);
-      } else if (!storedUser) {
-        // Oturum açmamışsa, yönlendirme yapın
-        router.push('/signin');
-      } else {
-        // Oturum açık ise localStorage'dan kullanıcı bilgilerini al
+      } else if (storedUser) {
+        // localStorage'da kullanıcı bilgileri varsa, onları kullan
         setUserSession(JSON.parse(storedUser));
       }
     }
-  }, [user, router]);
+  }, [user]);
 
-  //const handleSignOut = () => {
-   // signOut(auth)
-     // .then(() => {
-       // localStorage.removeItem('user');
-        //router.push('/signin');
-      //})
-    //  .catch((error) => console.error('Error signing out: ', error));
-  //};
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        localStorage.removeItem('user');
+        router.push('/signin');
+      })
+      .catch((error) => console.error('Error signing out: ', error));
+  };
+
+  const handleGetStarted = () => {
+    if (!userSession) {
+      // Kullanıcı giriş yapmadıysa yönlendir
+      router.push('/signin');
+    } else {
+      // Giriş yaptıysa başka bir işlem yap veya yönlendir
+      console.log('User is already logged in, proceed with the action.');
+    }
+  };
 
   return (
     <main>
       <ResponsiveAppBarHome />
       <Box className="relative w-full h-96">
         <Image
-          src="/img1.png" // Resmin public klasöründeki yolu
+          src="/img1.png"
           alt="Description of image"
-          fill // 'layout' prop yerine 'fill' kullanıyoruz
-          style={{ objectFit: 'cover' }} // Resmin kapsayıcı alanı tamamen doldurmasını sağlar
-          priority // Add priority property
+          fill
+          style={{ objectFit: 'cover' }}
+          priority
         />
       </Box>
       <InfoWithButton />
@@ -79,7 +85,7 @@ export default function Home() {
             color: 'black',
             fontSize: '50px',
             textAlign: 'center',
-            marginBottom: '10px' // Add spacing between texts
+            marginBottom: '10px'
           }}
         >
           Get started with Forem2go today
@@ -94,76 +100,30 @@ export default function Home() {
         >
           Start now and experience the best
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGetStarted}
+          sx={{ marginTop: '20px' }}
+        >
+          Get Started Now
+        </Button>
       </Box>
+
       <Grid container spacing={4} justifyContent="center" alignItems="center" style={{ marginTop: '50px' }}>
         <CardComp />
       </Grid>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: 'auto',
-          marginTop: '8%'
-        }}
-      >
-        <Typography
-          variant="h1"
-          sx={{
-            color: 'black',
-            fontSize: '50px',
-            textAlign: 'center',
-            marginBottom: '10px'
-          }}
-        >
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: 'auto', marginTop: '8%' }}>
+        <Typography variant="h1" sx={{ color: 'black', fontSize: '50px', textAlign: 'center', marginBottom: '10px' }}>
           Features of Forem Cloud Hosting
         </Typography>
-        <Typography
-          variant="h3"
-          sx={{
-            color: 'black',
-            fontSize: '30px',
-            textAlign: 'center',
-          }}
-        >
+        <Typography variant="h3" sx={{ color: 'black', fontSize: '30px', textAlign: 'center' }}>
           Discover our amazing features
         </Typography>
       </Box>
+
       <CardGrid />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: 'auto',
-          marginTop: '8%'
-        }}
-      >
-        <Typography
-          variant="h1"
-          sx={{
-            color: 'black',
-            fontSize: '50px',
-            textAlign: 'center',
-            marginBottom: '10px'
-          }}
-        >
-          Try Forem hosting in 4 Steps
-        </Typography>
-        <Typography
-          variant="h3"
-          sx={{
-            color: 'black',
-            fontSize: '30px',
-            textAlign: 'center',
-          }}
-        >
-          Simple and easy setup
-        </Typography>
-      </Box>
-      <CardCopmonent />
       <CubeCard />
       <TextWithImageComponent />
       <FooterCard />
