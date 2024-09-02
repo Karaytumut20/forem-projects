@@ -3,6 +3,7 @@ import { Box, Typography, Button } from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../../firebase/config';
 import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const Confirmation = () => {
   const [selectedPlan, setSelectedPlan] = useState('basic');
@@ -19,6 +20,9 @@ const Confirmation = () => {
   const [freeDomainID, setFreeDomainID] = useState('0');
   const [ownDomainID, setOwnDomainID] = useState('0');
   const [userID, setUserID] = useState('0');
+
+  // Firebase Authentication referansı
+  const auth = getAuth();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -48,9 +52,17 @@ const Confirmation = () => {
       setCreatedDate(localStorage.getItem('community_createdDate') || new Date().toISOString());
       setFreeDomainID(localStorage.getItem('freeDomainID') || '0');
       setOwnDomainID(localStorage.getItem('ownDomainID') || '0');
-      setUserID(localStorage.getItem('userID') || '0');
+
+      // Kullanıcı ID'sini Firebase Authentication'dan çekme
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUserID(user.uid); // Kullanıcı ID'sini ayarla
+        } else {
+          setUserID('0'); // Kullanıcı oturum açmamışsa sıfırla
+        }
+      });
     }
-  }, []);
+  }, [auth]);
 
   const handleGoBack = () => {
     if (typeof window !== 'undefined') {
