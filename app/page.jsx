@@ -40,14 +40,14 @@ export default function Home() {
     }
   }, [user, router]);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        localStorage.removeItem('user');
-        router.push('/signin');
-      })
-      .catch((error) => console.error('Error signing out: ', error));
-  };
+  //const handleSignOut = () => {
+   // signOut(auth)
+     // .then(() => {
+       // localStorage.removeItem('user');
+        //router.push('/signin');
+      //})
+    //  .catch((error) => console.error('Error signing out: ', error));
+  //};
 
   return (
     <main>
