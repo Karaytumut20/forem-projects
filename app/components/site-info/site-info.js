@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Container, Grid } from '@mui/material';
 
 const AboutYourSiteForm = () => {
@@ -6,6 +6,18 @@ const AboutYourSiteForm = () => {
   const [adminPassword, setAdminPassword] = useState('');
   const [communityName, setCommunityName] = useState('');
   const [communityDescription, setCommunityDescription] = useState('');
+  const [userID, setUserID] = useState('');
+
+  useEffect(() => {
+    // Aktif kullanıcı ID'sini al (örneğin, localStorage'dan)
+    const currentUserID = localStorage.getItem('currentUserID'); // Kimlik doğrulama sonucu buradan gelmeli
+    if (currentUserID) {
+      setUserID(currentUserID);
+    } else {
+      // Eğer bir user ID yoksa, yönlendirme yapılabilir veya hata mesajı verilebilir
+      console.warn("User ID bulunamadı.");
+    }
+  }, []);
 
   const handleAdminEmailChange = (event) => {
     setAdminEmail(event.target.value);
@@ -24,15 +36,22 @@ const AboutYourSiteForm = () => {
   };
 
   const handleContinue = () => {
-    // Store the data in localStorage
+    // Kullanıcı bilgilerinin depolanması
     localStorage.setItem('community_adminEmail', adminEmail);
     localStorage.setItem('community_password', adminPassword);
     localStorage.setItem('community_name', communityName);
     localStorage.setItem('community_desc', communityDescription);
     localStorage.setItem('community_paymentStatus', 'Pending');
     localStorage.setItem('community_createdDate', new Date().toISOString());
-    
-    // Navigate to the confirmation page
+
+    // UserID'yi de ekle
+    if (userID) {
+      localStorage.setItem('community_userID', userID);
+    } else {
+      console.error('User ID bulunamadı, veriler tam olmayabilir.');
+    }
+
+    // Onay sayfasına yönlendirme
     window.location.href = 'confirmation';
   };
 
@@ -54,7 +73,7 @@ const AboutYourSiteForm = () => {
       }}
     >
       <Typography variant="h5" gutterBottom sx={{ color: 'black' }}>
-        About Your Site
+        Site Hakkında
       </Typography>
 
       <Box
@@ -76,7 +95,7 @@ const AboutYourSiteForm = () => {
           type="email"
         />
         <TextField
-          label="Admin Password"
+          label="Admin Şifresi"
           value={adminPassword}
           onChange={handleAdminPasswordChange}
           fullWidth
@@ -84,14 +103,14 @@ const AboutYourSiteForm = () => {
           type="password"
         />
         <TextField
-          label="Community Name"
+          label="Topluluk İsmi"
           value={communityName}
           onChange={handleCommunityNameChange}
           fullWidth
           margin="normal"
         />
         <TextField
-          label="Describe your community in a sentence"
+          label="Topluluğunuzu bir cümleyle tanımlayın"
           value={communityDescription}
           onChange={handleCommunityDescriptionChange}
           fullWidth
@@ -107,7 +126,7 @@ const AboutYourSiteForm = () => {
               fullWidth
               onClick={handleGoBack}
             >
-              Go back
+              Geri Dön
             </Button>
           </Grid>
           <Grid item xs={6}>
@@ -117,7 +136,7 @@ const AboutYourSiteForm = () => {
               fullWidth
               onClick={handleContinue}
             >
-              Continue
+              Devam Et
             </Button>
           </Grid>
         </Grid>
