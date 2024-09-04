@@ -112,7 +112,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button
               sx={{ color: '#000', background: '#ffd740', fontSize: '11px', minWidth: '100px' }}
-              onClick={() => handleNavigate('/sign-in')}
+              onClick={() => handleNavigate('/signin')}
             >
               Live demo
             </Button>

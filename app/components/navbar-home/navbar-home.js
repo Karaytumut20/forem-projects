@@ -143,7 +143,7 @@ const ResponsiveAppBarHome = () => {
               open={Boolean(anchorElUser)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={() => handleNavigate('/profile')}>Profile</MenuItem>
+              <MenuItem onClick={() => handleNavigate('/settings')}>Settings</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
